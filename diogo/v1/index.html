@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FloBrain</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0d0a16; color: #f4ecdb; font-family: ui-sans-serif, system-ui, sans-serif; }
+  #frame { border: 0; width: 100%; height: 100%; display: block; background: #0d0a16; transition: opacity .4s ease; }
+  #frame.fade { opacity: 0; }
+  #splash { position: fixed; inset: 0; display: grid; place-items: center; background: #0d0a16; z-index: 10; pointer-events: none; opacity: 1; transition: opacity .4s ease; }
+  #splash.hide { opacity: 0; }
+  .sp-mark { width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, #8b6dff 0%, #5b3fd1 100%); box-shadow: 0 16px 48px rgba(139,109,255,0.5), inset 0 1px 0 rgba(255,255,255,0.25); position: relative; animation: spPulse 2s ease-in-out infinite; }
+  .sp-mark::after { content: ""; position: absolute; inset: 0; border-radius: 18px; background: radial-gradient(circle at 28% 25%, rgba(255,255,255,0.45), transparent 55%); }
+  @keyframes spPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.94); } }
+</style>
+</head>
+<body>
+<div id="splash"><div class="sp-mark"></div></div>
+<iframe id="frame" title="FloBrain"></iframe>
+<script type="text/x-html" id="page-login"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FloBrain · Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f%5B%5D=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0a16;
+  --surface:#15101f;
+  --surface-2:#1c1628;
+  --surface-3:#241d33;
+  --line:rgba(255,243,224,0.06);
+  --line-2:rgba(255,243,224,0.11);
+  --text:#f4ecdb;
+  --text-2:#c5b9a2;
+  --text-3:#857a68;
+  --text-4:#5a5247;
+  --accent:#8b6dff;
+  --accent-2:#b39dff;
+  --accent-deep:#5b3fd1;
+  --accent-soft:rgba(139,109,255,0.14);
+  --rose:#d97777;
+  --sage:#84a87d;
+  --plum:#c97acc;
+  --ff-display:'General Sans',ui-sans-serif,system-ui,sans-serif;
+  --ff-serif:'Fraunces',Georgia,serif;
+  --ff-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--ff-display);font-size:14px;-webkit-font-smoothing:antialiased;letter-spacing:-0.008em;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit;color:inherit;background:none;border:none;outline:none}
+
+.page{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow-y:auto;
+}
+.page::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 50% 35% at 10% 10%,rgba(139,109,255,0.13),transparent 65%),
+    radial-gradient(ellipse 40% 30% at 90% 95%,rgba(201,122,204,0.08),transparent 60%);
+}
+
+/* ============ SIGN IN PANE ============ */
+.signin{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  padding:48px 56px;
+  width:100%;max-width:520px;
+  min-height:100vh;
+  background:transparent;
+}
+.brand-row{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:34px;height:34px;border-radius:11px;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent-deep) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),0 6px 22px rgba(139,109,255,0.45);
+  position:relative;
+}
+.brand-mark::after{content:"";position:absolute;inset:0;border-radius:11px;background:radial-gradient(circle at 28% 25%,rgba(255,255,255,0.45),transparent 55%)}
+.brand-name{font-family:var(--ff-serif);font-size:22px;font-weight:500;letter-spacing:-0.025em}
+.brand-name strong{color:var(--accent);font-weight:700}
+
+.signin-body{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  max-width:420px;margin:0 auto;width:100%;padding:40px 0;
+}
+.eyebrow{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-3);font-weight:600;margin-bottom:14px}
+.signin h1{font-family:var(--ff-serif);font-size:46px;font-weight:500;letter-spacing:-0.032em;line-height:1.05;margin-bottom:10px}
+.signin h1 strong{color:var(--accent);font-weight:700}
+.signin .sub{font-size:14.5px;color:var(--text-2);line-height:1.55;letter-spacing:-0.005em;margin-bottom:36px;max-width:380px}
+
+.signin-providers{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.provider{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 18px;border-radius:12px;
+  background:var(--surface-2);border:1px solid var(--line-2);
+  font-size:13.5px;font-weight:500;color:var(--text);
+  transition:all .15s;
+  width:100%;text-align:left;
+}
+.provider:hover{background:var(--surface-3);border-color:rgba(255,243,224,0.18);transform:translateY(-1px)}
+.provider .ic{width:22px;height:22px;display:grid;place-items:center;flex-shrink:0}
+.provider.google .ic{background:#fff;border-radius:5px;color:#1a1a1a;font-weight:700;font-size:13px}
+.provider.apple .ic{color:#fff}
+.provider.sso .ic{color:var(--accent-2)}
+.provider .grow{flex:1}
+.provider .arr{color:var(--text-3);transition:transform .15s}
+.provider:hover .arr{transform:translateX(2px);color:var(--accent-2)}
+
+.divider{display:flex;align-items:center;gap:14px;margin:8px 0 22px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.divider span{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.16em;color:var(--text-3);text-transform:uppercase;font-weight:600}
+
+.form{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-family:var(--ff-mono);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+.field-input{
+  display:flex;align-items:center;gap:10px;
+  padding:13px 16px;
+  background:var(--surface-2);border:1px solid var(--line-2);
+  border-radius:11px;
+  transition:all .15s;
+}
+.field-input:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);background:var(--surface-3)}
+.field-input svg{color:var(--text-3);flex-shrink:0}
+.field-input input{flex:1;font-size:14px;letter-spacing:-0.005em}
+.field-input input::placeholder{color:var(--text-4)}
+.field-input .toggle{color:var(--text-3);transition:color .15s}
+.field-input .toggle:hover{color:var(--text-2)}
+
+.field-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px}
+.remember{display:flex;align-items:center;gap:8px;color:var(--text-2);cursor:pointer}
+.remember .ck{width:16px;height:16px;border-radius:5px;border:1.5px solid rgba(255,243,224,0.18);position:relative;transition:all .15s}
+.remember input{display:none}
+.remember input:checked + .ck{background:var(--accent);border-color:var(--accent)}
+.remember input:checked + .ck::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid #fff;border-width:0 1.7px 1.7px 0;transform:rotate(45deg)}
+.forgot{color:var(--accent-2);font-weight:500;letter-spacing:-0.005em;transition:color .15s}
+.forgot:hover{color:var(--accent)}
+
+.signin-cta{
+  margin-top:8px;
+  padding:14px 18px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+  color:#fff;font-size:14px;font-weight:600;letter-spacing:-0.005em;
+  box-shadow:0 12px 32px -10px rgba(139,109,255,0.5),inset 0 1px 0 rgba(255,255,255,0.18);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .15s;
+}
+.signin-cta:hover{transform:translateY(-1px)}
+
+.signin-foot{
+  margin-top:auto;padding-top:24px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--text-3);letter-spacing:-0.005em;
+}
+.signin-foot a{color:var(--text-2);font-weight:500}
+.signin-foot a:hover{color:var(--accent-2)}
+.signin-foot .links{display:flex;gap:18px}
+
+/* Responsive */
+@media (max-width:540px){
+  .signin{padding:32px 22px}
+  .signin h1{font-size:32px}
+}
+
+</style>
+</head>
+<body>
+
+<div class="page" data-screen-label="Sign in">
+
+  <!-- ============ SIGN IN PANE ============ -->
+  <aside class="signin">
+    <div class="brand-row">
+      <div class="brand-mark"></div>
+      <div class="brand-name">Flo<strong>Brain</strong></div>
+    </div>
+
+    <div class="signin-body">
+      <div class="eyebrow">— Welcome back</div>
+      <h1>Step back into <strong>flow.</strong></h1>
+      <p class="sub">Your rooms, conversations and AI buddies are right where you left them.</p>
+
+      <div class="signin-providers">
+        <button class="provider google">
+          <span class="ic">G</span>
+          <span class="grow">Continue with Google</span>
+          <svg class="arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <button class="provider apple">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.02-2.07 1.69-3.07 1.77-3.12-.96-1.41-2.46-1.6-3-1.62-1.27-.13-2.49.75-3.14.75-.65 0-1.65-.74-2.72-.72-1.4.02-2.69.81-3.41 2.07-1.46 2.52-.37 6.25 1.04 8.3.69 1 1.5 2.13 2.57 2.09 1.04-.04 1.43-.67 2.68-.67 1.25 0 1.6.67 2.7.65 1.12-.02 1.82-1.02 2.51-2.03.8-1.17 1.12-2.3 1.14-2.36-.02-.01-2.18-.84-2.2-3.34zM15 5.34c.57-.7.96-1.66.85-2.62-.83.04-1.83.55-2.43 1.24-.53.61-1 1.6-.87 2.54.93.07 1.88-.47 2.45-1.16z"/></svg></span>
+          <span class="grow">Continue with Apple</span>
+          <svg class="arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <button class="provider sso">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <span class="grow">Continue with SSO</span>
+          <svg class="arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <div class="divider"><span>or sign in with email</span></div>
+
+      <form class="form">
+        <div class="field">
+          <label>Email</label>
+          <div class="field-input">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" placeholder="you@studio.com" value="muhammad@flobrain.com"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="field-input">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" placeholder="••••••••••••" value="atelier-bronze-2026"/>
+            <button type="button" class="toggle" id="toggle">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="remember">
+            <input type="checkbox" checked/>
+            <span class="ck"></span>
+            <span>Keep me signed in</span>
+          </label>
+          <a class="forgot" href="#">Forgot password?</a>
+        </div>
+        <button type="submit" class="signin-cta">
+          Continue
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="signin-foot">
+      <span>New to FloBrain? <a href="#">Create a workspace</a></span>
+      <div class="links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Help</a>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+const t = document.getElementById('toggle');
+const inp = t?.previousElementSibling;
+t?.addEventListener('click', () => {
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+});
+
+document.querySelector('form')?.addEventListener('submit', e => {
+  e.preventDefault();
+  const cta = document.querySelector('.signin-cta');
+  cta.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="40 20"><circle cx="12" cy="12" r="9"/></svg> Signing in…`;
+  cta.style.opacity = '0.7';
+  setTimeout(() => {
+    if (window.parent && window.parent !== window) { window.parent.postMessage({ type: 'flobrain-signin' }, '*'); } else { window.location.href = 'FloBrain Atelier.html'; }
+  }, 800);
+});
+<\/script>
+
+</body>
+</html>
+</script>
+<script type="text/x-html" id="page-app"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FloBrain · Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0d0a16;
+  --surface:#15101f;
+  --surface-2:#1c1628;
+  --surface-3:#241d33;
+  --line:rgba(255,243,224,0.06);
+  --line-2:rgba(255,243,224,0.11);
+  --line-3:rgba(255,243,224,0.18);
+
+  --text:#f4ecdb;
+  --text-2:#c5b9a2;
+  --text-3:#857a68;
+  --text-4:#5a5247;
+
+  --accent:#8b6dff;
+  --accent-2:#b39dff;
+  --accent-soft:rgba(139,109,255,0.14);
+  --accent-soft-2:rgba(139,109,255,0.26);
+  --accent-deep:#5b3fd1;
+  --plum:#c97acc;
+  --rose:#d97777;
+  --sage:#84a87d;
+
+  --ff-display:'General Sans',ui-sans-serif,system-ui,sans-serif;
+  --ff-serif:'Fraunces',Georgia,serif;
+  --ff-mono:'JetBrains Mono',ui-monospace,monospace;
+
+  --r-xs:8px; --r-sm:12px; --r-md:16px; --r-lg:22px;
+  --halo:0 12px 36px -10px rgba(139,109,255,0.38);
+  --t:.22s cubic-bezier(.2,.7,.2,1);
+}
+
+/* THEME VARIANTS */
+[data-theme="garden"]{
+  --bg:#0c130d;
+  --surface:#10180e;
+  --surface-2:#162115;
+  --surface-3:#1d2b1d;
+  --line:rgba(220,255,222,0.06);
+  --line-2:rgba(220,255,222,0.11);
+  --text:#ecf4dc;
+  --text-2:#a8b99a;
+  --text-3:#6a7d62;
+  --text-4:#48564a;
+  --accent:#a8c882;
+  --accent-2:#c5dba2;
+  --accent-soft:rgba(168,200,130,0.12);
+  --accent-soft-2:rgba(168,200,130,0.22);
+  --halo:0 12px 36px -10px rgba(168,200,130,0.30);
+}
+[data-theme="dusk"]{
+  --bg:#160d18;
+  --surface:#1d1124;
+  --surface-2:#26172e;
+  --surface-3:#311e3a;
+  --line:rgba(255,228,255,0.07);
+  --line-2:rgba(255,228,255,0.12);
+  --text:#f5e8f0;
+  --text-2:#beb1c8;
+  --text-3:#7e7388;
+  --text-4:#564d61;
+  --accent:#c994d8;
+  --accent-2:#e2b8ee;
+  --accent-soft:rgba(201,148,216,0.12);
+  --accent-soft-2:rgba(201,148,216,0.22);
+  --plum:#d4a574;
+  --halo:0 12px 36px -10px rgba(201,148,216,0.32);
+}
+
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--ff-display);font-size:14px;letter-spacing:-0.008em;-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,textarea{font:inherit;color:inherit;background:none;border:none;outline:none}
+
+/* Scrollbars */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:rgba(255,243,224,0.06);border-radius:5px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,243,224,0.14);border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-track{background:transparent}
+::selection{background:var(--accent-soft-2);color:var(--text)}
+
+/* ======================= APP SHELL ======================= */
+.app{
+  height:100vh;
+  display:grid;
+  grid-template-columns:64px 280px 1fr 340px;
+  grid-template-rows:56px 1fr;
+  background:var(--bg);
+  position:relative;
+}
+.app::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 0% 0%,var(--accent-soft),transparent 65%),
+    radial-gradient(ellipse 50% 35% at 100% 100%,rgba(155,107,196,0.07),transparent 60%);
+}
+.app[data-mode="focus"]{grid-template-columns:64px 0 1fr 0}
+.app[data-mode="focus"] .lib,.app[data-mode="focus"] .inspect{display:none}
+
+/* ======================= TOP BAR ======================= */
+.top{
+  grid-column:1/-1;
+  display:grid;grid-template-columns:64px 280px minmax(0,1fr) auto;
+  align-items:center;
+  border-bottom:1px solid var(--line);
+  background:rgba(13,10,22,0.7);
+  backdrop-filter:blur(14px);
+  position:relative;z-index:5;
+  min-width:0;
+}
+.brand{display:flex;align-items:center;justify-content:center;height:100%;border-right:1px solid var(--line)}
+.brand-mark{
+  width:28px;height:28px;border-radius:9px;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent-deep) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),0 6px 18px rgba(139,109,255,0.45);
+  position:relative;
+}
+.brand-mark::after{content:"";position:absolute;inset:0;border-radius:9px;background:radial-gradient(circle at 28% 25%,rgba(255,255,255,0.45),transparent 55%)}
+
+.crumbs{display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid var(--line);height:100%;}
+.crumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);font-weight:500;letter-spacing:-0.012em}
+.crumb strong{color:var(--text);font-weight:600;letter-spacing:-0.018em}
+.crumb-sep{color:var(--text-4);font-family:var(--ff-serif);font-style:italic}
+
+.cmdbar{display:flex;align-items:center;justify-content:center;padding:0 20px}
+.cmdbar-pill{
+  display:flex;align-items:center;gap:12px;
+  width:100%;max-width:520px;
+  height:36px;padding:0 14px;
+  background:rgba(255,243,224,0.03);
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:var(--text-3);font-size:12.5px;
+  cursor:pointer;transition:all var(--t);
+}
+.cmdbar-pill:hover{background:rgba(255,243,224,0.06);border-color:var(--line-2);color:var(--text)}
+.cmdbar-pill svg{flex-shrink:0}
+.cmdbar-pill .grow{flex:1}
+.cmdbar-pill .kbd{font-family:var(--ff-mono);font-size:10px;color:var(--text-4);padding:2px 6px;border:1px solid var(--line);border-radius:5px;letter-spacing:0.04em}
+
+.top-right{display:flex;align-items:center;gap:6px;padding:0 14px;min-width:0;flex-wrap:nowrap}
+
+/* Tracker */
+.tracker{display:flex;align-items:center;gap:8px;padding:5px 5px 5px 5px;background:rgba(255,243,224,0.03);border:1px solid var(--line);border-radius:999px;height:36px}
+.tracker .play{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-deep));display:grid;place-items:center;color:#fff;box-shadow:0 4px 12px rgba(139,109,255,0.4)}
+.tracker .play.running{background:linear-gradient(135deg,var(--rose),#a04d4d)}
+.tracker .time{font-family:var(--ff-mono);font-size:12px;letter-spacing:0.04em;padding-right:8px;color:var(--text)}
+.tracker .label{font-size:11.5px;color:var(--text-2);padding-right:10px;border-left:1px solid var(--line);padding-left:10px}
+
+/* Mode toggle */
+.modes{display:flex;gap:0;background:rgba(255,243,224,0.03);border:1px solid var(--line);border-radius:999px;padding:3px;margin:0 6px}
+.mode{padding:5px 11px;border-radius:999px;font-size:11.5px;font-weight:500;color:var(--text-3);letter-spacing:-0.005em;display:flex;align-items:center;gap:5px}
+.mode:hover{color:var(--text)}
+.mode.active{background:var(--surface-3);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-2)}
+.mode svg{width:11px;height:11px;opacity:0.7}
+
+.iconbtn{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:var(--text-2);transition:all .12s}
+.iconbtn:hover{background:rgba(255,243,224,0.06);color:var(--text)}
+.iconbtn .dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--rose);border:2px solid var(--bg)}
+.iconbtn{position:relative}
+
+.user{display:flex;align-items:center;gap:9px;padding:3px 12px 3px 3px;background:rgba(255,243,224,0.03);border:1px solid var(--line);border-radius:999px;cursor:pointer;transition:background var(--t);height:36px}
+.user:hover{background:rgba(255,243,224,0.06)}
+.user-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-deep));display:grid;place-items:center;font-size:11px;font-weight:600;color:#fff;position:relative}
+.user-av::after{content:"";position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;border-radius:50%;background:var(--sage);border:2px solid var(--surface)}
+.user span{font-size:12.5px;font-weight:500}
+
+/* ======================= LEFT RAIL (64px) ======================= */
+.rail{
+  grid-row:2;grid-column:1;
+  border-right:1px solid var(--line);
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:4px;
+  z-index:3;
+}
+.rail-btn{
+  width:42px;height:42px;border-radius:11px;display:grid;place-items:center;color:var(--text-2);position:relative;transition:all .15s;cursor:pointer;
+}
+.rail-btn:hover{background:rgba(255,243,224,0.05);color:var(--text)}
+.rail-btn.active{background:var(--accent-soft);color:var(--accent)}
+.rail-btn.active::before{content:"";position:absolute;left:-12px;top:10px;bottom:10px;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
+.rail-btn .tip{position:absolute;left:52px;top:50%;transform:translateY(-50%);background:var(--surface-3);color:var(--text);padding:5px 10px;border-radius:7px;font-size:11.5px;white-space:nowrap;border:1px solid var(--line-2);opacity:0;pointer-events:none;transition:opacity .15s;z-index:50;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.rail-btn:hover .tip{opacity:1}
+.rail-divider{width:24px;height:1px;background:var(--line);margin:6px 0}
+.rail-spacer{flex:1}
+.rail-btn.mc{color:var(--accent)}
+.rail-btn.mc::after{content:"";position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 6px var(--sage);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ======================= LEFT LIBRARY ======================= */
+.lib{
+  grid-row:2;grid-column:2;
+  background:var(--surface);
+  border-right:1px solid var(--line);
+  overflow-y:auto;
+  display:flex;flex-direction:column;
+}
+.lib-head{padding:18px 18px 10px}
+.lib-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.lib-title h2{font-family:var(--ff-serif);font-size:22px;font-weight:500;letter-spacing:-0.025em;line-height:1}
+.lib-title h2 em{font-style:italic;color:var(--accent);font-weight:400}
+.lib-sub{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);font-weight:500}
+.lib-actions{display:flex;gap:6px;margin-top:14px}
+.lib-action{flex:1;display:flex;align-items:center;gap:7px;justify-content:center;padding:8px 10px;background:rgba(255,243,224,0.03);border:1px solid var(--line);border-radius:9px;font-size:11.5px;color:var(--text-2);font-weight:500;transition:all .15s}
+.lib-action:hover{background:rgba(255,243,224,0.06);color:var(--text);border-color:var(--line-2)}
+.lib-action.primary{background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(139,109,255,0.35);font-weight:600}
+.lib-action.primary:hover{background:linear-gradient(135deg,#9d83ff,#6c4fde);color:#fff}
+
+.lib-section{padding:14px 12px 4px}
+.lib-section-head{display:flex;align-items:center;justify-content:space-between;padding:0 8px 8px}
+.lib-section-label{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:500;display:flex;align-items:center;gap:6px}
+.lib-section-add{width:18px;height:18px;border-radius:5px;display:grid;place-items:center;color:var(--text-3);transition:all .15s}
+.lib-section-add:hover{background:rgba(255,243,224,0.06);color:var(--text)}
+
+.room{
+  display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:10px;margin:1px 0;cursor:pointer;transition:background .12s;
+  position:relative;
+}
+.room:hover{background:rgba(255,243,224,0.04)}
+.room.active{background:var(--accent-soft)}
+.room.active::before{content:"";position:absolute;left:-12px;top:10px;bottom:10px;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
+
+.room-glyph{
+  width:30px;height:30px;border-radius:9px;
+  background:var(--surface-3);
+  display:grid;place-items:center;
+  color:var(--text-2);font-weight:600;font-size:12px;
+  letter-spacing:-0.01em;
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+.room.active .room-glyph{background:linear-gradient(135deg,var(--accent-soft-2),var(--accent-soft));color:var(--accent);box-shadow:inset 0 0 0 1px var(--line-2)}
+.room-name{font-size:13.5px;font-weight:500;color:var(--text);letter-spacing:-0.012em;line-height:1.2;display:flex;flex-direction:column;gap:2px}
+.room-name small{font-family:var(--ff-mono);font-size:9.5px;color:var(--text-3);letter-spacing:0.04em;font-weight:400}
+.room.active .room-name{color:var(--text)}
+.room-badge{font-family:var(--ff-mono);background:var(--accent);color:#1a1209;font-size:9.5px;font-weight:600;padding:1px 6px;border-radius:999px;letter-spacing:0.02em}
+.room-presence{display:flex;gap:-4px}
+.room-presence .ppx{width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 4px rgba(132,168,125,0.5);margin-left:-2px}
+
+/* ======================= CANVAS (CENTER) ======================= */
+.canvas{
+  grid-row:2;grid-column:3;
+  background:var(--bg);
+  overflow-y:auto;
+  position:relative;
+}
+
+/* Canvas top: room title + meta */
+.canvas-head{
+  position:sticky;top:0;z-index:4;
+  background:linear-gradient(180deg,var(--bg) 70%,rgba(13,10,22,0));
+  padding:28px 36px 18px;
+  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start;
+}
+.canvas-title{display:flex;flex-direction:column;gap:8px}
+.canvas-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--ff-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3)}
+.canvas-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 6px rgba(132,168,125,0.5)}
+.canvas-h1{font-family:var(--ff-serif);font-size:34px;font-weight:500;letter-spacing:-0.028em;line-height:1.05;color:var(--text)}
+.canvas-h1 em{font-style:italic;color:var(--accent);font-weight:400}
+.canvas-meta{display:flex;align-items:center;gap:14px;font-size:12.5px;color:var(--text-2);letter-spacing:-0.005em}
+.canvas-meta .meta-item{display:flex;align-items:center;gap:6px}
+.canvas-meta .meta-item svg{color:var(--text-3)}
+.canvas-meta .stack{display:flex}
+.canvas-meta .stack .av{width:22px;height:22px;border-radius:50%;border:2px solid var(--bg);margin-left:-6px;font-size:9.5px;font-weight:600;display:grid;place-items:center;color:#1a1209}
+.canvas-meta .stack .av:first-child{margin-left:0}
+
+.canvas-actions{display:flex;align-items:flex-start;gap:6px}
+.ca-btn{display:flex;align-items:center;gap:7px;padding:8px 12px;background:rgba(255,243,224,0.03);border:1px solid var(--line);border-radius:10px;font-size:12px;font-weight:500;color:var(--text-2);transition:all .15s}
+.ca-btn:hover{background:rgba(255,243,224,0.06);color:var(--text);border-color:var(--line-2)}
+.ca-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(139,109,255,0.35);font-weight:600}
+
+/* Section nav (sticky horizontal) */
+.section-nav{
+  position:sticky;top:122px;z-index:3;
+  background:linear-gradient(180deg,var(--bg) 50%,rgba(13,10,22,0.85));
+  backdrop-filter:blur(6px);
+  padding:6px 36px 14px;
+  display:flex;align-items:center;gap:6px;
+  border-bottom:1px solid var(--line);
+}
+.section-nav .pill{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 13px;border-radius:999px;
+  font-size:12px;font-weight:500;color:var(--text-3);
+  cursor:pointer;transition:all .15s;
+  border:1px solid transparent;
+}
+.section-nav .pill:hover{color:var(--text);background:rgba(255,243,224,0.04)}
+.section-nav .pill.active{color:var(--text);background:var(--accent-soft);border-color:var(--line-2)}
+.section-nav .pill .count{font-family:var(--ff-mono);font-size:10px;color:var(--text-3);background:rgba(255,243,224,0.06);padding:1px 6px;border-radius:999px;font-weight:500}
+.section-nav .pill.active .count{color:var(--accent);background:rgba(212,165,116,0.18)}
+.section-nav-grow{flex:1}
+.section-nav .toolbtn{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--text-3);transition:all .15s}
+.section-nav .toolbtn:hover{background:rgba(255,243,224,0.05);color:var(--text)}
+
+/* Sections in continuous canvas */
+.section{padding:36px 36px 12px;scroll-margin-top:180px}
+.section + .section{border-top:1px dashed var(--line)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+.sec-title{display:flex;align-items:baseline;gap:14px}
+.sec-num{font-family:var(--ff-mono);font-size:11px;color:var(--text-3);letter-spacing:0.1em;font-weight:500}
+.sec-title h3{font-family:var(--ff-serif);font-size:22px;font-weight:500;letter-spacing:-0.025em;color:var(--text)}
+.sec-title h3 em{font-style:normal;color:var(--accent);font-weight:700}
+.sec-link{font-size:11.5px;color:var(--text-3);font-weight:500;letter-spacing:-0.005em;display:flex;align-items:center;gap:5px;cursor:pointer;transition:color .15s}
+.sec-link:hover{color:var(--accent)}
+
+/* CHAT SECTION */
+.chat-wrap{display:flex;flex-direction:column;gap:14px;max-width:780px}
+.msg{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:6px 0}
+.msg .av{
+  width:36px;height:36px;border-radius:11px;
+  display:grid;place-items:center;color:#1a1209;font-weight:600;font-size:12.5px;
+}
+.msg .av.ai{background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;box-shadow:var(--halo)}
+.msg .av.p1{background:linear-gradient(135deg,#c97acc,#7d4b88);color:#fff}
+.msg .av.p2{background:linear-gradient(135deg,var(--sage),#5d7c5a);color:#fff}
+.msg .av.p3{background:linear-gradient(135deg,var(--rose),#a04d4d);color:#fff}
+.msg-head{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.msg-name{font-size:13.5px;font-weight:600;letter-spacing:-0.012em}
+.msg-time{font-family:var(--ff-mono);font-size:10px;color:var(--text-4);letter-spacing:0.04em}
+.msg-role{font-family:var(--ff-mono);font-size:9.5px;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;padding:1px 6px;border:1px solid var(--line-2);border-radius:5px}
+.msg-body{font-size:13.5px;color:var(--text);line-height:1.55;letter-spacing:-0.005em;max-width:640px}
+.msg-body p+p{margin-top:8px}
+.msg-body code{font-family:var(--ff-mono);font-size:12px;background:var(--surface-3);padding:1px 6px;border-radius:4px;color:var(--accent-2)}
+.msg-reactions{display:flex;gap:5px;margin-top:8px}
+.rx{display:flex;align-items:center;gap:4px;padding:2px 8px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--text-2)}
+.rx svg{width:11px;height:11px}
+.rx.active{background:var(--accent-soft);border-color:var(--line-2);color:var(--accent-2)}
+
+.msg-card{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:8px;max-width:560px}
+.msg-card-head{font-family:var(--ff-mono);font-size:10px;color:var(--text-3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.msg-card-title{font-family:var(--ff-serif);font-size:17px;font-weight:500;letter-spacing:-0.02em;color:var(--text);margin-bottom:6px}
+.msg-card-sub{font-size:12.5px;color:var(--text-2);line-height:1.5}
+.msg-card-actions{display:flex;gap:6px;margin-top:12px}
+.mc-btn{font-size:11.5px;font-weight:500;padding:6px 11px;border-radius:8px;border:1px solid var(--line-2);background:transparent;color:var(--text-2);transition:all .15s}
+.mc-btn:hover{background:var(--accent-soft);color:var(--text);border-color:var(--line-2)}
+.mc-btn.prim{background:var(--accent);color:#fff;border-color:transparent;font-weight:600}
+.mc-btn.prim:hover{background:var(--accent-2)}
+
+/* Composer */
+.composer{
+  position:sticky;bottom:0;
+  background:linear-gradient(180deg,rgba(13,10,22,0) 0%,var(--bg) 30%);
+  padding:14px 0 24px;margin-top:18px;
+}
+.composer-inner{
+  background:var(--surface-2);
+  border:1px solid var(--line-2);
+  border-radius:16px;
+  padding:6px 6px 6px 18px;
+  display:flex;align-items:flex-end;gap:8px;
+  box-shadow:0 14px 40px -16px rgba(0,0,0,0.6);
+  max-width:780px;
+  transition:all .15s;
+}
+.composer-inner:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft),0 14px 40px -16px rgba(0,0,0,0.6)}
+.composer-route{display:flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--line);border-radius:8px;font-size:11.5px;color:var(--text-2);background:rgba(255,243,224,0.02);cursor:pointer;height:32px;align-self:center;flex-shrink:0;font-weight:500}
+.composer-route:hover{background:var(--accent-soft);border-color:var(--line-2);color:var(--text)}
+.composer-route .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.composer-input{flex:1;font-size:14px;padding:10px 4px;color:var(--text);background:none;border:none;resize:none;min-height:24px;max-height:180px;line-height:1.5;font-family:var(--ff-display);letter-spacing:-0.005em}
+.composer-input::placeholder{color:var(--text-4)}
+.composer-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:var(--text-3);transition:all .15s;align-self:center}
+.composer-icon:hover{background:var(--accent-soft);color:var(--text)}
+.composer-send{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-deep));display:grid;place-items:center;color:#fff;align-self:center;box-shadow:var(--halo);transition:transform .15s}
+.composer-send:hover{transform:translateY(-1px)}
+
+/* TASKS SECTION */
+.tasks-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.tcol{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;min-height:220px}
+.tcol-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.tcol-head h4{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-2);font-weight:600;display:flex;align-items:center;gap:8px}
+.tcol-head h4 .dot{width:8px;height:8px;border-radius:50%}
+.tcol[data-c="todo"] .dot{background:var(--text-3)}
+.tcol[data-c="doing"] .dot{background:var(--accent)}
+.tcol[data-c="done"] .dot{background:var(--sage)}
+.tcol-head .cnt{font-family:var(--ff-mono);font-size:10px;color:var(--text-3);background:var(--surface-3);padding:2px 8px;border-radius:999px;letter-spacing:0.04em;font-weight:600}
+.task{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px;transition:all .15s;cursor:pointer}
+.task:hover{border-color:var(--line-2);transform:translateY(-1px);box-shadow:0 8px 20px -10px rgba(0,0,0,0.4)}
+.task-meta{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.task-tag{font-family:var(--ff-mono);font-size:9.5px;letter-spacing:0.06em;text-transform:uppercase;padding:1px 6px;border-radius:5px;font-weight:600}
+.task-tag.hi{background:rgba(217,119,119,0.14);color:var(--rose);border:1px solid rgba(217,119,119,0.3)}
+.task-tag.md{background:rgba(212,165,116,0.14);color:var(--accent);border:1px solid var(--accent-soft-2)}
+.task-tag.lo{background:rgba(132,168,125,0.14);color:var(--sage);border:1px solid rgba(132,168,125,0.3)}
+.task-title{font-size:13px;font-weight:500;letter-spacing:-0.012em;color:var(--text);line-height:1.35;margin-bottom:8px}
+.task-foot{display:flex;align-items:center;justify-content:space-between}
+.task-due{font-family:var(--ff-mono);font-size:10px;color:var(--text-3);letter-spacing:0.04em;display:flex;align-items:center;gap:4px}
+.task-due.urgent{color:var(--rose)}
+.task-as{display:flex}
+.task-as .av{width:20px;height:20px;border-radius:50%;border:2px solid var(--surface-2);margin-left:-5px;font-size:9px;font-weight:600;display:grid;place-items:center;color:#fff}
+.task-as .av:first-child{margin-left:0}
+
+/* NOTES SECTION */
+.notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.note{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:18px 20px;transition:all .15s;cursor:pointer;position:relative;overflow:hidden}
+.note:hover{border-color:var(--line-2);transform:translateY(-1px);box-shadow:0 8px 20px -10px rgba(0,0,0,0.4)}
+.note::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.note-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.note-eyebrow{font-family:var(--ff-mono);font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);font-weight:500}
+.note-time{font-family:var(--ff-mono);font-size:9.5px;color:var(--text-4);letter-spacing:0.04em}
+.note h4{font-family:var(--ff-serif);font-size:17px;font-weight:500;letter-spacing:-0.018em;margin-bottom:8px;color:var(--text)}
+.note p{font-size:12.5px;color:var(--text-2);line-height:1.55;letter-spacing:-0.003em}
+.note-foot{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.note-foot .by{font-size:11px;color:var(--text-3)}
+.note-foot .by strong{color:var(--text-2);font-weight:600}
+
+/* ======================= INSPECTOR (RIGHT) ======================= */
+.inspect{
+  grid-row:2;grid-column:4;
+  background:var(--surface);
+  border-left:1px solid var(--line);
+  overflow-y:auto;
+  padding:18px 16px 24px;
+}
+.insp-section + .insp-section{margin-top:18px}
+.insp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 4px}
+.insp-head h4{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+.insp-head .more{color:var(--text-3);font-size:11.5px;cursor:pointer;transition:color .15s;font-weight:500}
+.insp-head .more:hover{color:var(--accent)}
+
+.impact-card{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.impact-card::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,var(--accent-soft),transparent 50%);pointer-events:none}
+.impact-row{display:flex;align-items:center;gap:14px;position:relative}
+.impact-ring{flex-shrink:0;position:relative;width:74px;height:74px}
+.impact-ring svg{transform:rotate(-90deg)}
+.impact-ring circle{fill:none;stroke-width:7;stroke-linecap:round}
+.impact-ring .bg{stroke:var(--surface-3)}
+.impact-ring .fg{stroke:url(#impGrad);filter:drop-shadow(0 0 4px var(--accent-soft-2))}
+.impact-ring-num{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--ff-mono);font-size:22px;font-weight:600;color:var(--text);letter-spacing:-0.02em}
+.impact-text h3{font-family:var(--ff-serif);font-size:19px;font-weight:500;letter-spacing:-0.022em;margin-bottom:3px}
+.impact-text .sub{font-size:11.5px;color:var(--text-2);line-height:1.4;max-width:170px}
+.impact-trend{font-family:var(--ff-mono);font-size:10px;background:rgba(132,168,125,0.13);color:var(--sage);border:1px solid rgba(132,168,125,0.25);padding:3px 8px;border-radius:999px;letter-spacing:0.04em;display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-weight:500}
+.impact-bars{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);position:relative}
+.imp-bar{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-size:11.5px}
+.imp-bar .lbl{color:var(--text-2)}
+.imp-bar .val{font-family:var(--ff-mono);font-size:10px;color:var(--text-3);letter-spacing:0.04em}
+.imp-bar .track{height:5px;background:var(--surface-3);border-radius:999px;overflow:hidden}
+.imp-bar .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:999px}
+
+/* Buddies */
+.buddy{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:10px;cursor:pointer;transition:background .12s}
+.buddy:hover{background:rgba(255,243,224,0.04)}
+.buddy.active{background:var(--accent-soft)}
+.buddy-av{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:12px;flex-shrink:0;position:relative}
+.buddy-av.b1{background:linear-gradient(135deg,var(--plum),#6b4685)}
+.buddy-av.b2{background:linear-gradient(135deg,var(--sage),#5d7c5a)}
+.buddy-av.b3{background:linear-gradient(135deg,var(--rose),#a04d4d)}
+.buddy-av.b4{background:linear-gradient(135deg,var(--accent),var(--accent-deep))}
+.buddy-av .live{position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;background:var(--sage);border:2px solid var(--surface)}
+.buddy-name{font-size:12.5px;font-weight:500;color:var(--text);letter-spacing:-0.01em;line-height:1.2}
+.buddy-name small{display:block;font-family:var(--ff-mono);font-size:9.5px;color:var(--text-3);letter-spacing:0.04em;margin-top:2px;font-weight:400}
+
+/* Tasks mini */
+.mini-task{display:flex;align-items:center;gap:11px;padding:8px 4px;border-bottom:1px solid var(--line)}
+.mini-task:last-child{border-bottom:none}
+.mini-task .ck{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--line-3);flex-shrink:0;transition:all .15s;cursor:pointer}
+.mini-task .ck.done{background:var(--sage);border-color:var(--sage);position:relative}
+.mini-task .ck.done::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid #fff;border-width:0 1.6px 1.6px 0;transform:rotate(45deg)}
+.mini-task .nm{flex:1;font-size:12.5px;color:var(--text);letter-spacing:-0.005em}
+.mini-task.done .nm{color:var(--text-3);text-decoration:line-through}
+.mini-task .when{font-family:var(--ff-mono);font-size:9.5px;color:var(--text-3);letter-spacing:0.04em;font-weight:500}
+.mini-task .when.urg{color:var(--rose)}
+
+.insp-card{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:14px}
+.insp-card .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat-cell{background:var(--surface-3);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+.stat-cell .l{font-family:var(--ff-mono);font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);font-weight:500}
+.stat-cell .v{font-family:var(--ff-mono);font-size:18px;font-weight:600;color:var(--text);margin-top:3px;letter-spacing:-0.02em}
+.stat-cell .v small{font-size:11px;color:var(--text-3);font-weight:400}
+
+/* Progress bar */
+.prog{padding:10px 4px}
+.prog-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);margin-bottom:6px}
+.prog-row strong{color:var(--text);font-weight:600}
+.prog-bar{height:6px;background:var(--surface-3);border-radius:999px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:999px}
+
+/* ======================= TWEAKS PANEL ======================= */
+.tw-fab{position:fixed;bottom:22px;right:22px;z-index:80;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-deep));display:grid;place-items:center;color:#fff;box-shadow:var(--halo),inset 0 1px 0 rgba(255,255,255,0.25);cursor:pointer;transition:transform .15s}
+.tw-fab:hover{transform:scale(1.05)}
+.tw-panel{position:fixed;bottom:80px;right:22px;z-index:80;width:300px;background:var(--surface);border:1px solid var(--line-2);border-radius:18px;box-shadow:0 28px 70px -10px rgba(0,0,0,0.7);padding:18px;display:none}
+.tw-panel.open{display:block}
+.tw-panel h4{font-family:var(--ff-serif);font-size:17px;font-weight:500;letter-spacing:-0.018em;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.tw-panel h4 em{font-style:italic;color:var(--accent)}
+.tw-x{width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,0.04);border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;color:var(--text-2);font-size:12px}
+.tw-sec{font-family:var(--ff-mono);font-size:9.5px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);margin:14px 0 8px;font-weight:600}
+.tw-themes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.tw-th{border:1px solid var(--line);border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;background:var(--surface-2);transition:all .15s}
+.tw-th:hover{border-color:var(--line-2)}
+.tw-th.active{border-color:var(--accent);background:var(--accent-soft)}
+.tw-th-sw{width:100%;height:30px;border-radius:8px;margin-bottom:6px}
+.tw-th[data-th="default"] .tw-th-sw{background:linear-gradient(135deg,#8b6dff,#5b3fd1)}
+.tw-th[data-th="garden"] .tw-th-sw{background:linear-gradient(135deg,#a8c882,#6b8854)}
+.tw-th[data-th="dusk"] .tw-th-sw{background:linear-gradient(135deg,#c994d8,#7d4f8c)}
+.tw-th-lbl{font-size:11px;font-weight:500;color:var(--text)}
+
+.tw-density,.tw-mode{display:flex;gap:3px;background:var(--surface-3);border:1px solid var(--line);border-radius:10px;padding:3px}
+.tw-density button,.tw-mode button{flex:1;padding:7px 8px;border-radius:7px;background:none;color:var(--text-3);font-size:11.5px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}
+.tw-density button.active,.tw-mode button.active{background:var(--accent-soft);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-2)}
+
+/* ======================= VIEWS ======================= */
+.canvas{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.view{display:none;flex:1;overflow-y:auto;position:relative}
+.view.active{display:flex;flex-direction:column}
+.app[data-view="docs"] .inspect,
+.app[data-view="report"] .inspect,
+.app[data-view="aichat"] .inspect{display:none}
+.app[data-view="docs"] .canvas,
+.app[data-view="report"] .canvas,
+.app[data-view="aichat"] .canvas{grid-column:3 / span 2}
+
+/* ===== Calendar view ===== */
+.cal-head{display:flex;align-items:center;justify-content:space-between;padding:24px 36px 18px;gap:18px;border-bottom:1px solid var(--line)}
+.cal-h1{font-family:var(--ff-serif);font-size:30px;font-weight:500;letter-spacing:-0.025em}
+.cal-h1 strong{color:var(--accent);font-weight:700}
+.cal-nav{display:flex;align-items:center;gap:6px}
+.cal-nav-btn{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:var(--text-2);border:1px solid var(--line);background:rgba(255,243,224,0.02);transition:all .15s}
+.cal-nav-btn:hover{background:var(--accent-soft);color:var(--text);border-color:var(--line-2)}
+.cal-today{padding:7px 14px;border-radius:9px;font-size:12px;font-weight:500;color:var(--text-2);border:1px solid var(--line);background:rgba(255,243,224,0.02)}
+.cal-today:hover{background:var(--accent-soft);color:var(--text)}
+.cal-range{font-family:var(--ff-mono);font-size:11px;letter-spacing:0.08em;color:var(--text-3);margin-left:6px}
+.cal-views{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.cal-views button{padding:6px 12px;border-radius:7px;font-size:11.5px;color:var(--text-3);font-weight:500}
+.cal-views button.active{background:var(--surface-3);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-2)}
+.cal-grid{display:grid;grid-template-columns:56px repeat(7,1fr);flex:1;overflow:auto;background:var(--bg)}
+.cal-corner{border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:sticky;top:0;left:0;background:var(--bg);z-index:3}
+.cal-day-head{padding:12px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:2}
+.cal-day-head .dow{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+.cal-day-head .dnum{font-family:var(--ff-serif);font-size:22px;font-weight:500;letter-spacing:-0.025em;margin-top:2px}
+.cal-day-head.today .dnum{color:var(--accent)}
+.cal-day-head.today::after{content:"";display:block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:4px;box-shadow:0 0 8px var(--accent-soft-2)}
+.cal-hour{padding:6px 8px;font-family:var(--ff-mono);font-size:9.5px;color:var(--text-4);text-align:right;border-right:1px solid var(--line);border-bottom:1px solid var(--line);letter-spacing:0.05em;background:var(--bg);position:sticky;left:0;z-index:1}
+.cal-cell{border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;min-height:54px}
+.cal-cell:hover{background:rgba(139,109,255,0.04)}
+.cal-evt{position:absolute;left:4px;right:4px;border-radius:7px;padding:6px 9px;font-size:11px;line-height:1.3;cursor:pointer;border:1px solid;backdrop-filter:blur(2px);overflow:hidden;transition:transform .15s}
+.cal-evt:hover{transform:translateY(-1px);z-index:4}
+.cal-evt .et{font-family:var(--ff-mono);font-size:9.5px;letter-spacing:0.05em;opacity:0.7;font-weight:500}
+.cal-evt .en{font-weight:600;letter-spacing:-0.005em;margin-top:1px}
+.cal-evt.purple{background:rgba(139,109,255,0.16);border-color:rgba(139,109,255,0.35);color:#cbb8ff}
+.cal-evt.sage{background:rgba(132,168,125,0.14);border-color:rgba(132,168,125,0.32);color:#b8d4af}
+.cal-evt.rose{background:rgba(217,119,119,0.14);border-color:rgba(217,119,119,0.32);color:#ebb5b5}
+.cal-evt.plum{background:rgba(201,122,204,0.14);border-color:rgba(201,122,204,0.32);color:#e0b8e1}
+
+/* ===== Tasks view (full) ===== */
+.tk-head{padding:24px 36px 14px;display:grid;grid-template-columns:1fr auto;gap:16px;border-bottom:1px solid var(--line)}
+.tk-filters{display:flex;align-items:center;gap:6px;padding:12px 36px;border-bottom:1px solid var(--line)}
+.tk-chip{padding:6px 12px;border-radius:999px;font-size:11.5px;font-weight:500;color:var(--text-3);border:1px solid var(--line);background:rgba(255,243,224,0.02);display:flex;align-items:center;gap:6px}
+.tk-chip:hover{color:var(--text);border-color:var(--line-2)}
+.tk-chip.active{background:var(--accent-soft);border-color:var(--line-2);color:var(--text)}
+.tk-chip .ct{font-family:var(--ff-mono);font-size:9.5px;color:var(--text-3);background:rgba(255,243,224,0.06);padding:1px 6px;border-radius:999px;font-weight:600}
+.tk-chip.active .ct{color:var(--accent);background:rgba(139,109,255,0.18)}
+.tk-board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding:18px 36px 36px;flex:1;overflow:auto}
+
+/* ===== Docs view ===== */
+.dx-head{padding:28px 56px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.dx-h1{font-family:var(--ff-serif);font-size:32px;font-weight:500;letter-spacing:-0.028em}
+.dx-h1 strong{color:var(--accent);font-weight:700}
+.dx-search{display:flex;align-items:center;gap:10px;background:rgba(255,243,224,0.03);border:1px solid var(--line);border-radius:10px;padding:9px 13px;width:300px;color:var(--text-3);font-size:12.5px;transition:all .15s}
+.dx-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);color:var(--text)}
+.dx-search input{flex:1;background:none;border:none;outline:none;color:var(--text);font:inherit;font-size:12.5px;letter-spacing:-0.005em;width:100%}
+.dx-search input::placeholder{color:var(--text-3)}
+.dx-tabs{display:flex;gap:6px;padding:14px 56px;border-bottom:1px solid var(--line)}
+.dx-tab{padding:7px 14px;border-radius:9px;font-size:12.5px;color:var(--text-3);font-weight:500}
+.dx-tab.active{background:var(--accent-soft);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-2)}
+.dx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;padding:28px 56px;flex:1;overflow-y:auto}
+.dx-card{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:10px;min-height:200px}
+.dx-card:hover{border-color:var(--line-2);transform:translateY(-2px);box-shadow:0 12px 28px -14px rgba(0,0,0,0.5)}
+.dx-card.featured{background:linear-gradient(135deg,rgba(139,109,255,0.14),rgba(91,63,209,0.07));border-color:rgba(139,109,255,0.3)}
+.dx-eyebrow{display:flex;align-items:center;justify-content:space-between;font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:500}
+.dx-eyebrow .ic{width:28px;height:28px;border-radius:8px;background:var(--surface-3);display:grid;place-items:center;color:var(--text-2)}
+.dx-card.featured .ic{background:rgba(139,109,255,0.22);color:var(--accent-2)}
+.dx-card h4{font-family:var(--ff-serif);font-size:19px;font-weight:500;letter-spacing:-0.022em;line-height:1.2}
+.dx-card .ex{font-size:12.5px;color:var(--text-2);line-height:1.55;flex:1}
+.dx-card .ft{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--line);font-size:11px;color:var(--text-3)}
+.dx-card .ft strong{color:var(--text-2);font-weight:600}
+
+/* ===== Report view ===== */
+.rp-head{padding:32px 48px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line)}
+.rp-h1{font-family:var(--ff-serif);font-size:36px;font-weight:500;letter-spacing:-0.03em;line-height:1.05}
+.rp-h1 strong{color:var(--accent);font-weight:700}
+.rp-sub{font-size:13px;color:var(--text-2);margin-top:6px;letter-spacing:-0.005em}
+.rp-period{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rp-period button{padding:7px 14px;border-radius:7px;font-size:11.5px;font-weight:500;color:var(--text-3)}
+.rp-period button.active{background:var(--surface-3);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-2)}
+.rp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:24px 48px 0}
+.rp-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.rp-stat .l{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+.rp-stat .v{font-family:var(--ff-serif);font-size:38px;font-weight:500;letter-spacing:-0.03em;line-height:1;margin-top:10px}
+.rp-stat .v small{font-family:var(--ff-mono);font-size:13px;color:var(--text-3);font-weight:500;letter-spacing:0.04em}
+.rp-stat .trend{margin-top:8px;font-family:var(--ff-mono);font-size:10px;color:var(--sage);background:rgba(132,168,125,0.13);border:1px solid rgba(132,168,125,0.25);padding:2px 7px;border-radius:999px;display:inline-block;letter-spacing:0.04em;font-weight:500}
+.rp-stat .trend.down{color:var(--rose);background:rgba(217,119,119,0.13);border-color:rgba(217,119,119,0.25)}
+.rp-stat.hero{background:linear-gradient(135deg,rgba(139,109,255,0.18),rgba(91,63,209,0.06));border-color:rgba(139,109,255,0.3)}
+.rp-row{display:grid;grid-template-columns:2fr 1fr;gap:14px;padding:18px 48px;flex:1}
+.rp-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column}
+.rp-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.rp-card-head h3{font-family:var(--ff-serif);font-size:19px;font-weight:500;letter-spacing:-0.022em}
+.rp-bars{flex:1;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:14px 4px 0;min-height:220px;border-bottom:1px solid var(--line);position:relative}
+.rp-bars .gridline{position:absolute;left:0;right:0;height:1px;background:var(--line);opacity:0.6}
+.rp-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
+.rp-bar .stack{width:100%;display:flex;flex-direction:column-reverse;border-radius:7px 7px 0 0;overflow:hidden;height:200px;justify-content:flex-start}
+.rp-bar .sg{background:linear-gradient(180deg,var(--accent-2),var(--accent));transition:all .3s}
+.rp-bar .sg.alt{background:linear-gradient(180deg,#84a87d,#5d7c5a)}
+.rp-bar .sg.alt2{background:linear-gradient(180deg,#c97acc,#7d4b88)}
+.rp-bar .dn{font-family:var(--ff-mono);font-size:10px;color:var(--text-3);letter-spacing:0.05em;font-weight:500}
+.rp-bars-legend{display:flex;gap:14px;padding:14px 0 0;margin-top:6px;font-size:11px;color:var(--text-2)}
+.rp-bars-legend .key{display:flex;align-items:center;gap:6px}
+.rp-bars-legend .sw{width:10px;height:10px;border-radius:3px}
+.rp-bars-legend .sw.a{background:var(--accent)}
+.rp-bars-legend .sw.b{background:var(--sage)}
+.rp-bars-legend .sw.c{background:#c97acc}
+.rp-list-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.rp-list-item:last-child{border-bottom:none}
+.rp-list-item .av{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:11px;font-weight:600;color:#fff}
+.rp-list-item .nm{font-size:13px;font-weight:500;letter-spacing:-0.01em}
+.rp-list-item .nm small{display:block;color:var(--text-3);font-size:10.5px;font-family:var(--ff-mono);letter-spacing:0.04em;margin-top:2px;font-weight:400}
+.rp-list-item .vn{font-family:var(--ff-mono);font-size:13px;font-weight:600;color:var(--text);letter-spacing:-0.01em}
+
+/* ===== AI Chat view ===== */
+.ai-wrap{display:grid;grid-template-columns:280px 1fr;flex:1;overflow:hidden}
+.ai-sidebar{border-right:1px solid var(--line);background:var(--surface);overflow-y:auto;padding:18px 12px}
+.ai-side-head{padding:0 8px 14px}
+.ai-new{display:flex;align-items:center;gap:8px;justify-content:center;width:100%;padding:10px 12px;background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;border-radius:10px;font-size:12.5px;font-weight:600;box-shadow:0 4px 14px rgba(139,109,255,0.3)}
+.ai-side-sec{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:600;padding:10px 8px}
+.ai-conv{padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .12s;display:flex;flex-direction:column;gap:3px}
+.ai-conv:hover{background:rgba(255,243,224,0.04)}
+.ai-conv.active{background:var(--accent-soft)}
+.ai-conv .ttl{font-size:13px;font-weight:500;letter-spacing:-0.01em;line-height:1.25;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ai-conv .met{font-family:var(--ff-mono);font-size:9.5px;color:var(--text-3);letter-spacing:0.04em;font-weight:500}
+.ai-main{display:flex;flex-direction:column;overflow:hidden}
+.ai-main-head{padding:20px 56px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.ai-main-head h2{font-family:var(--ff-serif);font-size:24px;font-weight:500;letter-spacing:-0.025em}
+.ai-main-head h2 strong{color:var(--accent);font-weight:700}
+.ai-main-head .meta{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-top:3px;font-weight:500}
+.ai-feed{flex:1;overflow-y:auto;padding:32px 0;display:flex;flex-direction:column;gap:28px;max-width:760px;margin:0 auto;width:100%;padding-left:24px;padding-right:24px}
+.ai-msg{display:grid;grid-template-columns:40px 1fr;gap:14px}
+.ai-msg.user{grid-template-columns:1fr 40px}
+.ai-msg .av{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:600;font-size:13px;color:#fff}
+.ai-msg.ai .av{background:linear-gradient(135deg,var(--accent),var(--accent-deep));box-shadow:var(--halo)}
+.ai-msg.user .av{background:linear-gradient(135deg,#c97acc,#7d4b88)}
+.ai-msg .body{font-size:14px;line-height:1.65;color:var(--text);letter-spacing:-0.003em}
+.ai-msg .body p+p{margin-top:10px}
+.ai-msg .name{font-size:13.5px;font-weight:600;margin-bottom:6px;letter-spacing:-0.012em}
+.ai-msg .name .role{font-family:var(--ff-mono);font-size:9.5px;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;padding:1px 6px;border:1px solid var(--line-2);border-radius:5px;margin-left:8px;font-weight:600}
+.ai-msg.user .body{text-align:right}
+.ai-msg.user .name{text-align:right}
+.ai-msg .body pre{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-family:var(--ff-mono);font-size:12px;color:var(--accent-2);margin-top:8px;overflow-x:auto;line-height:1.55}
+.ai-msg .body ul{margin-top:8px;padding-left:18px}
+.ai-msg .body li{margin-bottom:4px}
+.ai-composer{padding:14px 24px 24px;max-width:760px;margin:0 auto;width:100%}
+.ai-composer .composer-inner{margin:0;max-width:none}
+
+/* ===== Report view (extended) ===== */
+.rp-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:24px 48px 0}
+.rp-kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.rp-kpi .k-label{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+.rp-kpi .k-val{font-family:var(--ff-serif);font-size:38px;font-weight:500;letter-spacing:-0.03em;line-height:1;margin-top:10px}
+.rp-kpi .k-val small{font-family:var(--ff-mono);font-size:13px;color:var(--text-3);font-weight:500;letter-spacing:0.04em;margin-left:2px}
+.rp-kpi .k-delta{margin-top:8px;font-family:var(--ff-mono);font-size:10px;color:var(--text-3);padding:2px 8px;border-radius:999px;display:inline-block;letter-spacing:0.05em;font-weight:500;border:1px solid var(--line)}
+.rp-kpi .k-delta.up{color:var(--sage);background:rgba(132,168,125,0.13);border-color:rgba(132,168,125,0.25)}
+.rp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:18px 48px 36px}
+.rp-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;min-height:280px}
+.rp-card.span2{grid-column:span 2}
+.rp-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.rp-card-head h3{font-family:var(--ff-serif);font-size:19px;font-weight:500;letter-spacing:-0.022em}
+.rp-tag{font-family:var(--ff-mono);font-size:9.5px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:600;padding:3px 8px;border:1px solid var(--line);border-radius:999px}
+.rp-bars{display:flex;flex-direction:column;gap:14px;flex:1}
+.rp-bar{display:grid;grid-template-columns:140px 1fr 90px;gap:14px;align-items:center}
+.rp-bar .lbl{font-size:12.5px;color:var(--text-2);letter-spacing:-0.005em;font-weight:500}
+.rp-bar .bar{height:9px;background:var(--surface-3);border-radius:999px;overflow:hidden;position:relative}
+.rp-bar .bar span{position:absolute;left:0;top:0;bottom:0;border-radius:999px}
+.rp-bar .val{font-family:var(--ff-mono);font-size:11px;color:var(--text-3);letter-spacing:0.04em;text-align:right;font-weight:500}
+.rp-rhythm{flex:1;display:flex;flex-direction:column}
+.rh-chart{width:100%;flex:1;min-height:140px}
+.rh-x{display:grid;grid-template-columns:repeat(7,1fr);font-family:var(--ff-mono);font-size:10px;color:var(--text-3);letter-spacing:0.06em;padding-top:10px;border-top:1px solid var(--line);text-align:center;font-weight:500}
+.rp-list{display:flex;flex-direction:column;gap:2px;flex:1}
+.rp-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.rp-row:last-child{border-bottom:none}
+.rp-row .av{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:11px;font-weight:600;color:#fff}
+.rp-row .rr-body{min-width:0}
+.rp-row .n{font-size:13px;font-weight:600;letter-spacing:-0.012em;color:var(--text)}
+.rp-row .d{font-family:var(--ff-mono);font-size:10px;color:var(--text-3);letter-spacing:0.04em;margin-top:1px;font-weight:500}
+.rp-row .sc{font-family:var(--ff-serif);font-size:22px;font-weight:500;color:var(--accent);letter-spacing:-0.022em}
+.rp-narrative{font-size:13.5px;color:var(--text-2);line-height:1.7;letter-spacing:-0.003em;flex:1}
+.rp-narrative p+p{margin-top:12px}
+.rp-narrative strong{color:var(--accent-2);font-weight:600}
+
+/* ===== AI Chat view (new markup) ===== */
+.view-aichat{display:none;grid-template-columns:300px 1fr;flex:1;overflow:hidden}
+.view-aichat.active{display:grid}
+.ai-side{border-right:1px solid var(--line);background:var(--surface);overflow-y:auto;padding:18px 12px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.ai-side-head{display:flex;align-items:center;justify-content:space-between;padding:4px 10px 14px}
+.ai-side-head h3{font-family:var(--ff-serif);font-size:20px;font-weight:500;letter-spacing:-0.025em}
+.ai-new{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;display:grid;place-items:center;box-shadow:0 4px 14px rgba(139,109,255,0.3)}
+.ai-list{display:flex;flex-direction:column;gap:2px}
+.ai-group{font-family:var(--ff-mono);font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-3);font-weight:600;padding:14px 10px 6px}
+.ai-thread{display:flex;flex-direction:column;align-items:flex-start;padding:9px 10px;border-radius:9px;cursor:pointer;background:none;border:none;text-align:left;width:100%;transition:background .12s;gap:2px}
+.ai-thread:hover{background:rgba(255,243,224,0.04)}
+.ai-thread.active{background:var(--accent-soft)}
+.ai-thread .th-t{font-size:13px;font-weight:500;letter-spacing:-0.01em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;line-height:1.3}
+.ai-thread .th-m{font-family:var(--ff-mono);font-size:9.5px;color:var(--text-3);letter-spacing:0.05em;font-weight:500}
+
+.ai-main{display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.ai-top{padding:24px 48px 18px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.ai-title{font-family:var(--ff-serif);font-size:28px;font-weight:500;letter-spacing:-0.025em;line-height:1.1}
+.ai-stream{flex:1;overflow-y:auto;padding:30px 48px;display:flex;flex-direction:column;gap:28px;max-width:880px;margin:0 auto;width:100%}
+.ai-msg{display:grid;grid-template-columns:40px 1fr;gap:14px}
+.ai-msg.user{grid-template-columns:1fr 40px}
+.ai-av{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:600;font-size:13px;color:#fff;flex-shrink:0}
+.ai-av.agent{background:linear-gradient(135deg,var(--accent),var(--accent-deep));box-shadow:var(--halo)}
+.ai-av.user{background:linear-gradient(135deg,#c97acc,#7d4b88)}
+.ai-msg.user{justify-items:end}
+.ai-msg.user .ai-bub{max-width:600px}
+.ai-bub{font-size:14px;line-height:1.65;color:var(--text);letter-spacing:-0.003em;min-width:0}
+.ai-bub p{margin:0}
+.ai-bub p+p,.ai-bub p+ol{margin-top:10px}
+.ai-bub ol+p{margin-top:10px}
+.ai-meta{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;font-family:var(--ff-mono);font-size:10px;letter-spacing:0.04em;color:var(--text-3);font-weight:500}
+.ai-meta strong{font-family:var(--ff-display);font-size:13.5px;font-weight:600;letter-spacing:-0.012em;color:var(--text);text-transform:none}
+.ai-msg.user .ai-bub{text-align:right}
+.ai-msg.user .ai-meta{justify-content:flex-end}
+.ai-list-ol{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.ai-list-ol li{padding-left:4px}
+.ai-list-ol strong{color:var(--accent-2);font-weight:600}
+.ai-bub code{font-family:var(--ff-mono);font-size:12.5px;background:var(--surface-3);padding:1px 7px;border-radius:5px;color:var(--accent-2)}
+.ai-attach{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ai-att{display:flex;align-items:center;gap:7px;padding:6px 11px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;font-family:var(--ff-mono);font-size:11px;color:var(--text-2);letter-spacing:0.02em}
+
+.ai-composer{padding:14px 48px 22px;border-top:1px solid var(--line);background:var(--bg)}
+.ai-route{display:flex;gap:5px;margin-bottom:10px}
+.ai-rt{padding:6px 12px;border-radius:999px;font-size:11.5px;color:var(--text-3);font-weight:500;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,243,224,0.02);transition:all .15s}
+.ai-rt:hover{color:var(--text);border-color:var(--line-2)}
+.ai-rt.active{background:var(--accent-soft);border-color:var(--line-2);color:var(--text)}
+.ai-input{background:var(--surface-2);border:1px solid var(--line-2);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;max-width:880px;margin:0 auto}
+.ai-input:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.ai-input textarea{width:100%;font-size:14px;color:var(--text);background:none;border:none;resize:none;min-height:48px;line-height:1.5;font-family:var(--ff-display);letter-spacing:-0.005em;outline:none}
+.ai-input textarea::placeholder{color:var(--text-4)}
+.ai-actions{display:flex;align-items:center;gap:6px;justify-content:flex-end}
+.ai-act{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:var(--text-3);transition:all .15s}
+.ai-act:hover{background:var(--accent-soft);color:var(--text)}
+.ai-send{padding:8px 18px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;font-size:12.5px;font-weight:600;letter-spacing:-0.005em;box-shadow:var(--halo);margin-left:8px}
+.ai-send:hover{transform:translateY(-1px)}
+
+/* ===== TOASTS, POPOVERS, MENUS ===== */
+.toast-host{position:fixed;bottom:90px;right:22px;z-index:120;display:flex;flex-direction:column;gap:8px;pointer-events:none;align-items:flex-end}
+.toast{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:500;color:var(--text);box-shadow:0 18px 50px -10px rgba(0,0,0,0.6);min-width:240px;max-width:360px;backdrop-filter:blur(12px);transform:translateY(8px);opacity:0;transition:all .25s cubic-bezier(.2,.7,.2,1);pointer-events:auto}
+.toast.show{transform:translateY(0);opacity:1}
+.toast .ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex-shrink:0;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-deep))}
+.toast.success .ic{background:linear-gradient(135deg,var(--sage),#5d7c5a)}
+.toast.warn .ic{background:linear-gradient(135deg,var(--rose),#a04d4d)}
+.toast .body{flex:1;min-width:0;line-height:1.35}
+.toast .body small{display:block;font-family:var(--ff-mono);font-size:10px;color:var(--text-3);letter-spacing:0.04em;margin-top:2px;font-weight:500}
+.toast .x{color:var(--text-3);width:18px;height:18px;display:grid;place-items:center;border-radius:5px;flex-shrink:0;cursor:pointer}
+.toast .x:hover{background:rgba(255,243,224,0.06);color:var(--text)}
+
+.popover{position:absolute;z-index:60;background:var(--surface);border:1px solid var(--line-2);border-radius:14px;box-shadow:0 22px 60px -10px rgba(0,0,0,0.65);padding:6px;min-width:240px;display:none;animation:popIn .18s cubic-bezier(.2,.7,.2,1)}
+.popover.open{display:block}
+@keyframes popIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.pop-head{padding:8px 12px 6px;font-family:var(--ff-mono);font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3);font-weight:600;display:flex;align-items:center;justify-content:space-between}
+.pop-head .ct{font-family:var(--ff-mono);font-size:9.5px;color:var(--accent);background:var(--accent-soft);padding:1px 7px;border-radius:999px;letter-spacing:0.04em;font-weight:600}
+.pop-row{display:flex;align-items:center;gap:11px;padding:7px 10px;border-radius:9px;cursor:pointer;transition:background .12s}
+.pop-row:hover{background:var(--accent-soft)}
+.pop-row .av{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:11px;flex-shrink:0;position:relative}
+.pop-row .av .live{position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;background:var(--sage);border:2px solid var(--surface)}
+.pop-row .av .away{position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;background:var(--text-4);border:2px solid var(--surface)}
+.pop-row .nm{font-size:13px;font-weight:500;letter-spacing:-0.01em;color:var(--text);line-height:1.2;flex:1;min-width:0}
+.pop-row .nm small{display:block;font-family:var(--ff-mono);font-size:9.5px;color:var(--text-3);letter-spacing:0.04em;margin-top:2px;font-weight:500;text-transform:none}
+.pop-row .st{font-family:var(--ff-mono);font-size:9.5px;color:var(--sage);letter-spacing:0.04em;font-weight:600}
+.pop-row .st.away{color:var(--text-3)}
+.pop-sep{height:1px;background:var(--line);margin:4px 8px}
+.pop-row.action{padding:9px 12px;color:var(--accent-2);font-weight:500;font-size:12.5px;gap:9px}
+.pop-row.action svg{color:var(--accent)}
+
+/* Inline-clickable meta */
+.meta-item.clickable{cursor:pointer;padding:4px 8px;border-radius:7px;margin:-4px -8px;transition:background .12s}
+.meta-item.clickable:hover{background:rgba(255,243,224,0.05);color:var(--text)}
+
+/* End */
+
+/* RESPONSIVE TOP BAR */
+@media (max-width:1400px){
+  .tracker .label{display:none}
+  .user span{display:none}
+  .user{padding:3px}
+}
+@media (max-width:1200px){
+  .modes .mode{padding:5px 8px;font-size:0;gap:0}
+  .modes .mode svg{width:13px;height:13px;opacity:1}
+  .crumbs{padding:0 12px}
+  .crumb:not(:last-child){display:none}
+}
+@media (max-width:1000px){
+  .app{grid-template-columns:64px 248px minmax(0,1fr) 296px}
+  .tracker .time{font-size:11px;padding-right:6px}
+  .top-right{gap:4px;padding:0 10px}
+}
+
+/* DENSITY */
+.app[data-density="compact"]{grid-template-columns:64px 256px 1fr 312px}
+.app[data-density="compact"] .canvas-head{padding:18px 26px 12px}
+.app[data-density="compact"] .canvas-h1{font-size:28px}
+.app[data-density="compact"] .section{padding:24px 26px 8px}
+.app[data-density="compact"] body{font-size:13px}
+
+.app[data-density="spacious"]{grid-template-columns:64px 296px 1fr 360px}
+.app[data-density="spacious"] .canvas-head{padding:36px 48px 22px}
+.app[data-density="spacious"] .canvas-h1{font-size:40px}
+.app[data-density="spacious"] .section{padding:48px 48px 16px}
+
+</style>
+</head>
+<body>
+
+<template id="__bundler_thumbnail" data-bg-color="#0d0a16">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="t" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#8b6dff"/>
+        <stop offset="100%" stop-color="#5b3fd1"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="800" fill="#0d0a16"/>
+    <rect x="420" y="280" width="360" height="240" rx="60" fill="url(#t)"/>
+    <circle cx="600" cy="400" r="60" fill="#0d0a16" opacity="0.85"/>
+  </svg>
+</template>
+
+<div class="app" id="app" data-mode="default" data-theme="default" data-density="comfortable" data-view="workspace" data-screen-label="Workspace">
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="top">
+    <div class="brand"><div class="brand-mark"></div></div>
+    <div class="crumbs">
+      <span class="crumb"><strong>Workspace</strong></span>
+      <span class="crumb-sep">/</span>
+      <span class="crumb">Acme · <strong>Design Room</strong></span>
+    </div>
+    <div class="cmdbar">
+      <button class="cmdbar-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="grow">Search rooms, tasks, notes…</span>
+        <span class="kbd">⌘K</span>
+      </button>
+    </div>
+    <div class="top-right">
+      <div class="tracker">
+        <button class="play" id="playBtn" title="Start tracking">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+        </button>
+        <span class="time" id="trackTime">01:47:22</span>
+        <span class="label">SVI hero polish</span>
+      </div>
+      <div class="modes">
+        <button class="mode active" data-mode="default" title="Default">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          Default
+        </button>
+        <button class="mode" data-mode="focus" title="Focus mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1"/></svg>
+          Focus
+        </button>
+        <button class="mode" data-mode="custom" title="Custom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          Custom
+        </button>
+      </div>
+      <button class="iconbtn" title="Notifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="dot"></span>
+      </button>
+      <button class="iconbtn" title="Help">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+      <div class="user">
+        <div class="user-av">MA</div>
+        <span>Muhammad</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ LEFT RAIL ============ -->
+  <aside class="rail">
+    <button class="rail-btn active" data-view="workspace" title="Workspace"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="tip">Workspace</span></button>
+    <button class="rail-btn" data-view="aichat" title="AI Chat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="tip">AI Chat</span></button>
+    <button class="rail-btn" data-view="tasks" title="Tasks"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span class="tip">Tasks</span></button>
+    <button class="rail-btn" data-view="calendar" title="Calendar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="tip">Calendar</span></button>
+    <button class="rail-btn" data-view="docs" title="Docs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="tip">Docs</span></button>
+    <button class="rail-btn" data-view="report" title="Report"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="tip">Report</span></button>
+    <div class="rail-divider"></div>
+    <button class="rail-btn" title="Claude"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/></svg><span class="tip">Claude</span></button>
+    <button class="rail-btn" title="Figma"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 4h4v8H8a4 4 0 0 1 0-8z"/><path d="M12 4h4a4 4 0 0 1 0 8h-4"/><path d="M8 12h4v8a4 4 0 0 1-4-4 4 4 0 0 1 0-4z"/></svg><span class="tip">Figma</span></button>
+    <button class="rail-btn" title="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg><span class="tip">GitHub</span></button>
+    <button class="rail-btn" title="Add tool"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span class="tip">Add tool</span></button>
+    <div class="rail-spacer"></div>
+    <button class="rail-btn mc" title="Mission Control"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg><span class="tip">Mission Control</span></button>
+  </aside>
+
+  <!-- ============ LIBRARY ============ -->
+  <aside class="lib">
+    <div class="lib-head">
+      <div class="lib-title">
+        <h2>Hi, Muhammad<strong style="font-style:normal;color:var(--accent);font-weight:500">.</strong></h2>
+      </div>
+      <div class="lib-sub">— 3 rooms active today</div>
+      <div class="lib-actions">
+        <button class="lib-action primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New room
+        </button>
+        <button class="lib-action">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Quick AI
+        </button>
+      </div>
+    </div>
+
+    <div class="lib-section">
+      <div class="lib-section-head">
+        <span class="lib-section-label">Pinned</span>
+      </div>
+      <div class="room active">
+        <div class="room-glyph">DR</div>
+        <div class="room-name">Design Room <small>6 members</small></div>
+        <span class="room-badge">3</span>
+      </div>
+      <div class="room">
+        <div class="room-glyph">SV</div>
+        <div class="room-name">Space VI · NASA <small>3 active now</small></div>
+        <div class="room-presence"><span class="ppx"></span><span class="ppx"></span><span class="ppx"></span></div>
+      </div>
+      <div class="room">
+        <div class="room-glyph">BC</div>
+        <div class="room-name">Bootcamp 2025 <small>11 members</small></div>
+      </div>
+    </div>
+
+    <div class="lib-section">
+      <div class="lib-section-head">
+        <span class="lib-section-label">Projects</span>
+        <button class="lib-section-add"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="room">
+        <div class="room-glyph">LV</div>
+        <div class="room-name">Legal VI redesign <small>2 members</small></div>
+        <span class="room-badge">1</span>
+      </div>
+      <div class="room">
+        <div class="room-glyph">RC</div>
+        <div class="room-name">RoboCollective QA <small>4 members</small></div>
+      </div>
+      <div class="room">
+        <div class="room-glyph">ST</div>
+        <div class="room-name">Strapi sync <small>1 member</small></div>
+      </div>
+      <div class="room">
+        <div class="room-glyph">TR</div>
+        <div class="room-name">Travel · Dubai <small>solo</small></div>
+      </div>
+    </div>
+
+    <div class="lib-section">
+      <div class="lib-section-head">
+        <span class="lib-section-label">AI Buddies</span>
+        <button class="lib-section-add"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="room">
+        <div class="room-glyph">RS</div>
+        <div class="room-name">Research <small>Always-on</small></div>
+      </div>
+      <div class="room">
+        <div class="room-glyph">LG</div>
+        <div class="room-name">Legal <small>Scoped to LVI</small></div>
+      </div>
+      <div class="room">
+        <div class="room-glyph">WR</div>
+        <div class="room-name">Writer <small>Drafts &amp; emails</small></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ CANVAS (CONTINUOUS) ============ -->
+  <main class="canvas">
+
+  <div class="view view-workspace active">
+    <div class="canvas-head">
+      <div class="canvas-title">
+        <div class="canvas-eyebrow"><span class="dot"></span> Live · 2 active now · last activity 4m ago</div>
+        <h1 class="canvas-h1">Design Room<em> · </em>SVI hero polish</h1>
+        <div class="canvas-meta">
+          <span class="meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Demo Friday</span>
+          <span class="meta-item clickable" id="membersTrigger" style="position:relative">
+            <span class="stack">
+              <span class="av" style="background:linear-gradient(135deg,#c97acc,#7d4b88);color:#fff">DI</span>
+              <span class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a);color:#fff">RE</span>
+              <span class="av" style="background:linear-gradient(135deg,#d97777,#a04d4d);color:#fff">KE</span>
+              <span class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1);color:#fff">MA</span>
+            </span>
+            <span style="margin-left:6px">6 members</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="margin-left:4px"><polyline points="6 9 12 15 18 9"/></svg>
+            <!-- Members popover -->
+            <div class="popover" id="membersPopover" style="top:calc(100% + 8px);right:0">
+              <div class="pop-head">Room members <span class="ct">6</span></div>
+              <div class="pop-row"><div class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">MA<span class="live"></span></div><div class="nm">Muhammad Aimal<small>You · Owner</small></div><span class="st">Active</span></div>
+              <div class="pop-row"><div class="av" style="background:linear-gradient(135deg,#c97acc,#7d4b88)">DI<span class="live"></span></div><div class="nm">Diogo<small>Engineering</small></div><span class="st">Active</span></div>
+              <div class="pop-row"><div class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a)">RE<span class="live"></span></div><div class="nm">Rebecca<small>Design</small></div><span class="st">Active</span></div>
+              <div class="pop-row"><div class="av" style="background:linear-gradient(135deg,#d97777,#a04d4d)">KE<span class="away"></span></div><div class="nm">Kendra<small>PM</small></div><span class="st away">Away</span></div>
+              <div class="pop-row"><div class="av" style="background:linear-gradient(135deg,#d4a574,#a87344)">CE<span class="away"></span></div><div class="nm">Celeste<small>Copy</small></div><span class="st away">Idle</span></div>
+              <div class="pop-row"><div class="av" style="background:linear-gradient(135deg,#6b8ec7,#3e5a8e)">SA<span class="away"></span></div><div class="nm">Sandeep<small>Engineering</small></div><span class="st away">3h ago</span></div>
+              <div class="pop-sep"></div>
+              <div class="pop-row action" id="inviteMember"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Invite to room</div>
+            </div>
+          </span>
+        </div>
+      </div>
+      <div class="canvas-actions" style="position:relative">
+        <button class="ca-btn" id="startCallBtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> Start call</button>
+        <button class="ca-btn" id="shareBtn">Share</button>
+        <!-- Share popover -->
+        <div class="popover" id="sharePopover" style="top:calc(100% + 8px);right:0">
+          <div class="pop-head">Share this room</div>
+          <div class="pop-row" data-share="link"><div class="av" style="background:rgba(139,109,255,0.18);color:var(--accent-2)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><div class="nm">Copy room link<small>flobrain.com/r/design-room</small></div></div>
+          <div class="pop-row" data-share="invite"><div class="av" style="background:rgba(132,168,125,0.18);color:var(--sage)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="nm">Invite by email<small>Add new member</small></div></div>
+          <div class="pop-row" data-share="export"><div class="av" style="background:rgba(201,122,204,0.18);color:#e0b8e1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div class="nm">Export room<small>Markdown · PDF</small></div></div>
+          <div class="pop-sep"></div>
+          <div class="pop-row" data-share="settings"><div class="av" style="background:rgba(255,243,224,0.06);color:var(--text-2)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1"/></svg></div><div class="nm">Permissions<small>Manage who can access</small></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section nav -->
+    <nav class="section-nav" id="sectionNav">
+      <button class="pill active" data-jump="sec-chat"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Conversation <span class="count">24</span></button>
+      <button class="pill" data-jump="sec-tasks"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Tasks <span class="count">7</span></button>
+      <button class="pill" data-jump="sec-notes"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Notes <span class="count">4</span></button>
+      <div class="section-nav-grow"></div>
+      <button class="toolbtn" title="Filter"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></button>
+      <button class="toolbtn" title="Settings"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.11-1.21l2-1.59-2-3.46-2.36.94a7 7 0 0 0-2.09-1.21L14 3h-4l-.44 2.47a7 7 0 0 0-2.09 1.21L5.11 5.74l-2 3.46 2 1.59A7 7 0 0 0 5 12a7 7 0 0 0 .11 1.21l-2 1.59 2 3.46 2.36-.94a7 7 0 0 0 2.09 1.21L10 21h4l.44-2.47a7 7 0 0 0 2.09-1.21l2.36.94 2-3.46-2-1.59A7 7 0 0 0 19 12z"/></svg></button>
+    </nav>
+
+    <!-- ===== SECTION 1: CONVERSATION ===== -->
+    <section class="section" id="sec-chat">
+      <div class="sec-head">
+        <div class="sec-title"><span class="sec-num">— 01</span><h3>The <em>conversation</em></h3></div>
+        <span class="sec-link">Open in full view →</span>
+      </div>
+
+      <div class="chat-wrap">
+        <div class="msg">
+          <div class="av p1">DI</div>
+          <div>
+            <div class="msg-head"><span class="msg-name">Diogo</span><span class="msg-time">10:42 AM</span></div>
+            <div class="msg-body"><p>NASA image integration is done — pushed to staging this morning. Hero now pulls the planet of the day from APOD and falls back to a curated set if the API rate-limits.</p></div>
+            <div class="msg-reactions"><span class="rx active">✦ 3</span><span class="rx">+</span></div>
+          </div>
+        </div>
+
+        <div class="msg">
+          <div class="av p2">RE</div>
+          <div>
+            <div class="msg-head"><span class="msg-name">Rebecca</span><span class="msg-time">10:51 AM</span></div>
+            <div class="msg-body"><p>Looks great. One thought — the headline weight feels a little heavy against the planetary backdrop. Can we try the display in a regular weight with looser tracking?</p></div>
+          </div>
+        </div>
+
+        <div class="msg">
+          <div class="av ai">FB</div>
+          <div>
+            <div class="msg-head"><span class="msg-name">FloBrain</span><span class="msg-role">AI · Design Buddy</span><span class="msg-time">10:52 AM</span></div>
+            <div class="msg-body"><p>I pulled the current hero spec from Figma. The display is set in <code>Fraunces 600 / -2.5% tracking</code>. Trying <code>Fraunces 400 / -1.5%</code> against the APOD backdrop should soften the contrast without losing weight. Want me to draft three weight options as variants?</p></div>
+            <div class="msg-card">
+              <div class="msg-card-head"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/></svg> Proposed variants · Hero headline</div>
+              <div class="msg-card-title">3 weight studies, side-by-side</div>
+              <div class="msg-card-sub">Renders the SVI hero with Fraunces at 400, 500, 600 — all with adjusted tracking. Estimated 4 minutes.</div>
+              <div class="msg-card-actions">
+                <button class="mc-btn prim">Draft variants</button>
+                <button class="mc-btn">Show spec diff</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="msg">
+          <div class="av p3">KE</div>
+          <div>
+            <div class="msg-head"><span class="msg-name">Kendra</span><span class="msg-time">11:14 AM</span></div>
+            <div class="msg-body"><p>Bernard is reviewing copy Friday morning — let's lock the layout decision today so we can ship the new hero by Thursday EOD.</p></div>
+            <div class="msg-reactions"><span class="rx active">👍 2</span><span class="rx">+</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <div class="composer">
+        <div class="composer-inner">
+          <button class="composer-route" title="Route">
+            <span class="dot"></span> Auto · Design Room
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <textarea class="composer-input" placeholder="Write a message — type / for commands, @ to mention…" rows="1" id="composerInput"></textarea>
+          <button class="composer-icon" title="Attach"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+          <button class="composer-icon" title="Mic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></button>
+          <button class="composer-send" title="Send"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: TASKS ===== -->
+    <section class="section" id="sec-tasks">
+      <div class="sec-head">
+        <div class="sec-title"><span class="sec-num">— 02</span><h3>The <em>work</em></h3></div>
+        <span class="sec-link">Open kanban →</span>
+      </div>
+      <div class="tasks-grid">
+        <div class="tcol" data-c="todo">
+          <div class="tcol-head"><h4><span class="dot"></span>To do</h4><span class="cnt">3</span></div>
+          <div class="task">
+            <div class="task-meta"><span class="task-tag hi">High</span></div>
+            <div class="task-title">Lock hero typography decision before Bernard demo</div>
+            <div class="task-foot"><span class="task-due urgent">Today, 5 PM</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#9b6bc4,#6b4685)">DI</span><span class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a)">RE</span></span></div>
+          </div>
+          <div class="task">
+            <div class="task-meta"><span class="task-tag md">Med</span></div>
+            <div class="task-title">Bootcamp messaging — finalize student-facing copy</div>
+            <div class="task-foot"><span class="task-due">Wed</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#d4a574,#a87344);color:#1a1209">CE</span></span></div>
+          </div>
+          <div class="task">
+            <div class="task-meta"><span class="task-tag lo">Low</span></div>
+            <div class="task-title">Sketch new agent-routing affordance for composer</div>
+            <div class="task-foot"><span class="task-due">Next wk</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#d4a574,#a87344);color:#1a1209">MA</span></span></div>
+          </div>
+        </div>
+        <div class="tcol" data-c="doing">
+          <div class="tcol-head"><h4><span class="dot"></span>In progress</h4><span class="cnt">2</span></div>
+          <div class="task">
+            <div class="task-meta"><span class="task-tag hi">High</span></div>
+            <div class="task-title">SVI hero — implement 3 weight variants in Figma</div>
+            <div class="task-foot"><span class="task-due urgent">Thu EOD</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a)">RE</span><span class="av" style="background:linear-gradient(135deg,#d4a574,#a87344);color:#1a1209">MA</span></span></div>
+          </div>
+          <div class="task">
+            <div class="task-meta"><span class="task-tag md">Med</span></div>
+            <div class="task-title">Strapi DB — fix missing internship entries</div>
+            <div class="task-foot"><span class="task-due">Fri</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#d4a574,#a87344);color:#1a1209">MA</span></span></div>
+          </div>
+        </div>
+        <div class="tcol" data-c="done">
+          <div class="tcol-head"><h4><span class="dot"></span>Shipped</h4><span class="cnt">2</span></div>
+          <div class="task">
+            <div class="task-meta"><span class="task-tag lo">Low</span></div>
+            <div class="task-title">NASA image integration — APOD + fallback set</div>
+            <div class="task-foot"><span class="task-due">Mon</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#9b6bc4,#6b4685)">DI</span></span></div>
+          </div>
+          <div class="task">
+            <div class="task-meta"><span class="task-tag md">Med</span></div>
+            <div class="task-title">3-column cockpit shipped to staging</div>
+            <div class="task-foot"><span class="task-due">Last wk</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#d4a574,#a87344);color:#1a1209">SA</span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: NOTES ===== -->
+    <section class="section" id="sec-notes" style="padding-bottom:48px">
+      <div class="sec-head">
+        <div class="sec-title"><span class="sec-num">— 03</span><h3>The <em>thinking</em></h3></div>
+        <span class="sec-link">All notes →</span>
+      </div>
+      <div class="notes-grid">
+        <div class="note">
+          <div class="note-head"><span class="note-eyebrow">Spec · Hero</span><span class="note-time">2d ago</span></div>
+          <h4>Hero typography study</h4>
+          <p>Comparing Fraunces 400/500/600 against the APOD planetary background. The goal is to preserve the editorial weight without competing with the imagery. Tracking adjustments matter more than weight here.</p>
+          <div class="note-foot"><span class="by">by <strong>Rebecca</strong> · updated 4h ago</span></div>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-eyebrow">Decision</span><span class="note-time">3d ago</span></div>
+          <h4>Why we chose APOD over Unsplash</h4>
+          <p>NASA's APOD gives us editorially-curated imagery with provenance and metadata. Unsplash is faster to integrate but the science context becomes muddier. APOD wins because it reinforces the institutional voice.</p>
+          <div class="note-foot"><span class="by">by <strong>Diogo</strong> · 6 thoughts</span></div>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-eyebrow">Meeting · Mon</span><span class="note-time">5d ago</span></div>
+          <h4>Bernard sync — Friday demo plan</h4>
+          <p>Three things to land: new hero, refreshed copy, working sign-up flow. Bernard wants to see the typography decision rationale, not just the result.</p>
+          <div class="note-foot"><span class="by">by <strong>Kendra</strong> · 12 attendees</span></div>
+        </div>
+        <div class="note">
+          <div class="note-head"><span class="note-eyebrow">Reference</span><span class="note-time">1w ago</span></div>
+          <h4>Editorial typography references</h4>
+          <p>A collection of editorial sites with strong serif/sans pairings against full-bleed imagery. The New Yorker, Are.na, MIT Press are the closest references for what we want SVI to feel like.</p>
+          <div class="note-foot"><span class="by">by <strong>Muhammad</strong> · 8 links</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ CALENDAR VIEW ============ -->
+  <div class="view view-calendar" id="view-calendar">
+    <div class="cal-head">
+      <div>
+        <div class="canvas-eyebrow" style="margin-bottom:6px"><span class="dot"></span> 12 events this week · 3 today</div>
+        <h1 class="cal-h1">Calendar<strong>.</strong> <span class="cal-range">May 11 — 17, 2026</span></h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="cal-today">Today</button>
+        <div class="cal-nav">
+          <button class="cal-nav-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="cal-nav-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <div class="cal-views">
+          <button>Day</button><button class="active">Week</button><button>Month</button>
+        </div>
+        <button class="ca-btn primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New event</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- ============ TASKS VIEW ============ -->
+  <div class="view view-tasks" id="view-tasks">
+    <div class="tk-head">
+      <div>
+        <div class="canvas-eyebrow" style="margin-bottom:6px"><span class="dot"></span> 14 active · 3 due today</div>
+        <h1 class="cal-h1">Tasks<strong>.</strong></h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="cal-views"><button class="active">Board</button><button>List</button><button>Timeline</button></div>
+        <button class="ca-btn primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New task</button>
+      </div>
+    </div>
+    <div class="tk-filters">
+      <button class="tk-chip active">All <span class="ct">14</span></button>
+      <button class="tk-chip">Assigned to me <span class="ct">7</span></button>
+      <button class="tk-chip">High priority <span class="ct">4</span></button>
+      <button class="tk-chip">Due this week <span class="ct">9</span></button>
+      <button class="tk-chip">Design Room <span class="ct">5</span></button>
+      <button class="tk-chip">SVI <span class="ct">6</span></button>
+      <div style="flex:1"></div>
+      <button class="tk-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> Filter</button>
+    </div>
+    <div class="tk-board">
+      <div class="tcol" data-c="todo">
+        <div class="tcol-head"><h4><span class="dot"></span>Backlog</h4><span class="cnt">4</span></div>
+        <div class="task"><div class="task-meta"><span class="task-tag lo">Low</span></div><div class="task-title">Audit composer affordance — keyboard hints</div><div class="task-foot"><span class="task-due">Next wk</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">MA</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag md">Med</span></div><div class="task-title">Bootcamp landing — student testimonial layout</div><div class="task-foot"><span class="task-due">In 2w</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#c97acc,#7d4b88)">DI</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag lo">Low</span></div><div class="task-title">Refactor agent-routing dropdown component</div><div class="task-foot"><span class="task-due">—</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a)">RE</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag lo">Low</span></div><div class="task-title">Travel docs · Dubai trip</div><div class="task-foot"><span class="task-due">In 3w</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">MA</span></span></div></div>
+      </div>
+      <div class="tcol" data-c="todo">
+        <div class="tcol-head"><h4><span class="dot"></span>Today</h4><span class="cnt">3</span></div>
+        <div class="task"><div class="task-meta"><span class="task-tag hi">High</span></div><div class="task-title">Lock hero typography decision before demo</div><div class="task-foot"><span class="task-due urgent">5 PM</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#c97acc,#7d4b88)">DI</span><span class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a)">RE</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag md">Med</span></div><div class="task-title">Reply Kendra re: Friday demo agenda</div><div class="task-foot"><span class="task-due urgent">3 PM</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">MA</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag md">Med</span></div><div class="task-title">Bootcamp messaging — review final copy</div><div class="task-foot"><span class="task-due">EOD</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">CE</span></span></div></div>
+      </div>
+      <div class="tcol" data-c="doing">
+        <div class="tcol-head"><h4><span class="dot"></span>This week</h4><span class="cnt">4</span></div>
+        <div class="task"><div class="task-meta"><span class="task-tag hi">High</span></div><div class="task-title">SVI hero — implement 3 weight variants</div><div class="task-foot"><span class="task-due urgent">Thu</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a)">RE</span><span class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">MA</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag md">Med</span></div><div class="task-title">Strapi — fix missing internship entries</div><div class="task-foot"><span class="task-due">Fri</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">MA</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag md">Med</span></div><div class="task-title">QA pass — RoboCollective dashboard</div><div class="task-foot"><span class="task-due">Fri</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#d97777,#a04d4d)">KE</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag lo">Low</span></div><div class="task-title">Legal VI — review redline from counsel</div><div class="task-foot"><span class="task-due">Sat</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#c97acc,#7d4b88)">DI</span></span></div></div>
+      </div>
+      <div class="tcol" data-c="done">
+        <div class="tcol-head"><h4><span class="dot"></span>Shipped</h4><span class="cnt">3</span></div>
+        <div class="task"><div class="task-meta"><span class="task-tag lo">Low</span></div><div class="task-title">NASA APOD integration · staging</div><div class="task-foot"><span class="task-due">Mon</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#c97acc,#7d4b88)">DI</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag md">Med</span></div><div class="task-title">3-column cockpit shipped</div><div class="task-foot"><span class="task-due">Last wk</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">SA</span></span></div></div>
+        <div class="task"><div class="task-meta"><span class="task-tag lo">Low</span></div><div class="task-title">Onboarding email sequence</div><div class="task-foot"><span class="task-due">Last wk</span><span class="task-as"><span class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a)">RE</span></span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DOCS VIEW ============ -->
+  <div class="view view-docs" id="view-docs">
+    <div class="dx-head">
+      <div>
+        <div class="canvas-eyebrow" style="margin-bottom:6px"><span class="dot"></span> 28 docs · 6 edited this week</div>
+        <h1 class="dx-h1">Docs<strong>.</strong></h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="dx-search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="docSearchInput" placeholder="Search docs…" autocomplete="off"/></div>
+        <button class="ca-btn primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New doc</button>
+      </div>
+    </div>
+    <div class="dx-tabs">
+      <button class="dx-tab active">All</button>
+      <button class="dx-tab">Specs</button>
+      <button class="dx-tab">Decisions</button>
+      <button class="dx-tab">Meetings</button>
+      <button class="dx-tab">References</button>
+      <button class="dx-tab">Drafts</button>
+    </div>
+    <div class="dx-grid">
+      <div class="dx-card featured">
+        <div class="dx-eyebrow"><span>Spec · Pinned</span><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span></div>
+        <h4>SVI Hero — Typography study v3</h4>
+        <div class="ex">Comparing Fraunces 400/500/600 against the APOD planetary background. Tracking adjustments matter more than weight against full-bleed imagery.</div>
+        <div class="ft"><span>by <strong>Rebecca</strong></span><span>4h ago</span></div>
+      </div>
+      <div class="dx-card">
+        <div class="dx-eyebrow"><span>Decision</span><span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span></div>
+        <h4>Why we chose APOD over Unsplash</h4>
+        <div class="ex">NASA's APOD gives editorially-curated imagery with provenance and metadata. Reinforces the institutional voice we want SVI to have.</div>
+        <div class="ft"><span>by <strong>Diogo</strong></span><span>3d ago</span></div>
+      </div>
+      <div class="dx-card">
+        <div class="dx-eyebrow"><span>Meeting · Mon</span><span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span></div>
+        <h4>Bernard sync · Friday demo plan</h4>
+        <div class="ex">Three things to land: new hero, refreshed copy, working sign-up flow. Bernard wants to see the typography rationale, not just the result.</div>
+        <div class="ft"><span>by <strong>Kendra</strong></span><span>5d ago</span></div>
+      </div>
+      <div class="dx-card">
+        <div class="dx-eyebrow"><span>Reference</span><span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></div>
+        <h4>Editorial typography references</h4>
+        <div class="ex">The New Yorker, Are.na, MIT Press — closest references for the editorial weight we want SVI to feel like, with strong serif/sans pairings.</div>
+        <div class="ft"><span>by <strong>Muhammad</strong></span><span>1w ago</span></div>
+      </div>
+      <div class="dx-card">
+        <div class="dx-eyebrow"><span>Spec</span><span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span></div>
+        <h4>Agent routing — composer architecture</h4>
+        <div class="ex">How the auto-router picks between FloBrain, Research buddy and Design buddy. Confidence thresholds and override patterns.</div>
+        <div class="ft"><span>by <strong>Muhammad</strong></span><span>2w ago</span></div>
+      </div>
+      <div class="dx-card">
+        <div class="dx-eyebrow"><span>Draft</span><span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span></div>
+        <h4>Bootcamp 2025 — student-facing copy</h4>
+        <div class="ex">Draft of the landing copy and FAQ for incoming bootcamp cohort. Tone: warm, plain, no jargon. Still needs Kendra's review.</div>
+        <div class="ft"><span>by <strong>Celeste</strong></span><span>yesterday</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ REPORT VIEW ============ -->
+  <div class="view view-report" id="view-report">
+    <div class="rp-head">
+      <div>
+        <div class="canvas-eyebrow" style="margin-bottom:6px"><span class="dot"></span> Week 19 · May 11 — 17</div>
+        <h1 class="dx-h1">Report<strong>.</strong></h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="cal-views"><button>Day</button><button class="active">Week</button><button>Month</button><button>Quarter</button></div>
+        <button class="ca-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export</button>
+      </div>
+    </div>
+    <div class="rp-kpis">
+      <div class="rp-kpi"><div class="k-label">Focus hours</div><div class="k-val">38<small>h 24m</small></div><div class="k-delta up">↗ +14% vs last week</div></div>
+      <div class="rp-kpi"><div class="k-label">Tasks shipped</div><div class="k-val">23</div><div class="k-delta up">↗ +6 vs last week</div></div>
+      <div class="rp-kpi"><div class="k-label">Avg. session length</div><div class="k-val">52<small>m</small></div><div class="k-delta">→ stable</div></div>
+      <div class="rp-kpi"><div class="k-label">Impact score</div><div class="k-val">72<small>/100</small></div><div class="k-delta up">↗ +4 pts</div></div>
+    </div>
+    <div class="rp-grid">
+      <div class="rp-card span2">
+        <div class="rp-card-head"><h3>Time distribution — by room</h3><span class="rp-tag">Last 7 days</span></div>
+        <div class="rp-bars">
+          <div class="rp-bar"><div class="lbl">SVI Project</div><div class="bar"><span style="width:84%;background:linear-gradient(90deg,var(--accent),var(--accent-2))"></span></div><div class="val">14h 12m</div></div>
+          <div class="rp-bar"><div class="lbl">Design Room</div><div class="bar"><span style="width:62%;background:linear-gradient(90deg,#c97acc,#7d4b88)"></span></div><div class="val">10h 24m</div></div>
+          <div class="rp-bar"><div class="lbl">Bootcamp 2025</div><div class="bar"><span style="width:46%;background:linear-gradient(90deg,#84a87d,#5d7c5a)"></span></div><div class="val">7h 48m</div></div>
+          <div class="rp-bar"><div class="lbl">RoboCollective</div><div class="bar"><span style="width:24%;background:linear-gradient(90deg,#d97777,#a04d4d)"></span></div><div class="val">4h 02m</div></div>
+          <div class="rp-bar"><div class="lbl">Admin / Misc</div><div class="bar"><span style="width:12%;background:linear-gradient(90deg,#a89272,#6f5e4b)"></span></div><div class="val">1h 58m</div></div>
+        </div>
+      </div>
+      <div class="rp-card">
+        <div class="rp-card-head"><h3>Focus rhythm</h3></div>
+        <div class="rp-rhythm">
+          <svg viewBox="0 0 280 120" class="rh-chart" preserveAspectRatio="none">
+            <defs><linearGradient id="rgg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity="0.5"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,90 L40,72 L80,60 L120,75 L160,40 L200,30 L240,45 L280,28" stroke="var(--accent)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M0,90 L40,72 L80,60 L120,75 L160,40 L200,30 L240,45 L280,28 L280,120 L0,120 Z" fill="url(#rgg)"/>
+          </svg>
+          <div class="rh-x"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        </div>
+      </div>
+      <div class="rp-card">
+        <div class="rp-card-head"><h3>Top contributors</h3></div>
+        <div class="rp-list">
+          <div class="rp-row"><div class="av" style="background:linear-gradient(135deg,#8b6dff,#5b3fd1)">MA</div><div class="rr-body"><div class="n">Muhammad Aimal</div><div class="d">42 tasks · 16h focused</div></div><div class="sc">94</div></div>
+          <div class="rp-row"><div class="av" style="background:linear-gradient(135deg,#c97acc,#7d4b88)">DI</div><div class="rr-body"><div class="n">Diogo</div><div class="d">28 tasks · 14h focused</div></div><div class="sc">88</div></div>
+          <div class="rp-row"><div class="av" style="background:linear-gradient(135deg,#84a87d,#5d7c5a)">RE</div><div class="rr-body"><div class="n">Rebecca</div><div class="d">19 tasks · 11h focused</div></div><div class="sc">76</div></div>
+          <div class="rp-row"><div class="av" style="background:linear-gradient(135deg,#d97777,#a04d4d)">KE</div><div class="rr-body"><div class="n">Kendra</div><div class="d">14 tasks · 8h focused</div></div><div class="sc">68</div></div>
+        </div>
+      </div>
+      <div class="rp-card span2">
+        <div class="rp-card-head"><h3>Recent shipped — narrative</h3><span class="rp-tag">Editorial</span></div>
+        <div class="rp-narrative">
+          <p><strong>Monday.</strong> Diogo locked the APOD integration on staging — NASA imagery now flows automatically through SVI's hero rotation. First time we've shipped a third-party data pipeline without a hotfix.</p>
+          <p><strong>Wednesday.</strong> Rebecca's typography study landed three weight variants of the SVI hero. Group consensus: Fraunces 500 with -1.5 tracking. Decision doc in Docs.</p>
+          <p><strong>Friday.</strong> Bernard demo went smoother than expected. He flagged the agent-routing dropdown as confusing — Muhammad's refactor is queued for next sprint.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ AI CHAT VIEW ============ -->
+  <div class="view view-aichat" id="view-aichat">
+    <aside class="ai-side">
+      <div class="ai-side-head">
+        <h3>Conversations</h3>
+        <button class="ai-new"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+      <div class="ai-list">
+        <div class="ai-group">Today</div>
+        <button class="ai-thread active"><div class="th-t">SVI hero — typography crit</div><div class="th-m">FloBrain · 14 turns</div></button>
+        <button class="ai-thread"><div class="th-t">Friday demo agenda draft</div><div class="th-m">Research buddy · 8 turns</div></button>
+        <div class="ai-group">Yesterday</div>
+        <button class="ai-thread"><div class="th-t">APOD API — rate-limit strategy</div><div class="th-m">FloBrain · 6 turns</div></button>
+        <button class="ai-thread"><div class="th-t">Bootcamp copy edit</div><div class="th-m">Design buddy · 11 turns</div></button>
+        <div class="ai-group">This week</div>
+        <button class="ai-thread"><div class="th-t">RoboCollective dashboard QA</div><div class="th-m">FloBrain · 22 turns</div></button>
+        <button class="ai-thread"><div class="th-t">Editorial references compile</div><div class="th-m">Research buddy · 5 turns</div></button>
+      </div>
+    </aside>
+    <main class="ai-main">
+      <div class="ai-top">
+        <div>
+          <div class="canvas-eyebrow" style="margin-bottom:6px"><span class="dot"></span> FloBrain · routed to design buddy</div>
+          <h2 class="ai-title">SVI hero — typography crit</h2>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="ca-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share</button>
+          <button class="ca-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+        </div>
+      </div>
+      <div class="ai-stream">
+        <div class="ai-msg user">
+          <div class="ai-av user">CE</div>
+          <div class="ai-bub"><div class="ai-meta"><strong>You</strong><span>11:42</span></div><p>I have three Fraunces weights for the SVI hero — 400, 500, 600. Want to land on one before Bernard's Friday demo. Background is NASA's APOD, so the imagery changes daily. What's the right way to think about this?</p></div>
+        </div>
+        <div class="ai-msg agent">
+          <div class="ai-av agent"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <div class="ai-bub"><div class="ai-meta"><strong>FloBrain → Design buddy</strong><span>11:42</span></div>
+            <p>Three things to think about when the background image rotates daily:</p>
+            <ol class="ai-list-ol">
+              <li><strong>Weight robustness.</strong> 400 risks losing legibility against bright planetary imagery. 600 always reads but can feel shouty against soft nebulae.</li>
+              <li><strong>Tracking matters more than weight.</strong> Tightening to -1.5 to -2 lets 500 hold up across both ends. Editorial titling typically wants tight tracking at display sizes anyway.</li>
+              <li><strong>Backstop with a scrim.</strong> A 24px linear gradient from black at the bottom-left fixes the worst contrast cases without making it feel like a UI overlay.</li>
+            </ol>
+            <p>My pick: <strong>500 with -1.5 tracking</strong>, plus a subtle scrim. Want me to mock it against three APOD samples — bright, dark, and middle-tone?</p>
+          </div>
+        </div>
+        <div class="ai-msg user">
+          <div class="ai-av user">CE</div>
+          <div class="ai-bub"><div class="ai-meta"><strong>You</strong><span>11:45</span></div><p>Yes — mock all three, and include a worst-case (sun closeup). Rebecca should see this before the crit.</p></div>
+        </div>
+        <div class="ai-msg agent">
+          <div class="ai-av agent"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <div class="ai-bub"><div class="ai-meta"><strong>Design buddy</strong><span>11:45</span></div><p>Drafted four mocks at <code>~/SVI/hero-typography-study/</code>. Tagged Rebecca and added a thread to Design Room. Worst-case (Sun closeup) needs the scrim to extend to 40px — will note that in the spec.</p>
+          <div class="ai-attach">
+            <div class="ai-att"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg> hero-bright.png</div>
+            <div class="ai-att"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg> hero-dark.png</div>
+            <div class="ai-att"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg> hero-sun.png</div>
+          </div></div>
+        </div>
+      </div>
+      <div class="ai-composer">
+        <div class="ai-route">
+          <button class="ai-rt active"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg> Auto-route</button>
+          <button class="ai-rt">FloBrain</button>
+          <button class="ai-rt">Research</button>
+          <button class="ai-rt">Design</button>
+        </div>
+        <div class="ai-input">
+          <textarea placeholder="Ask FloBrain anything… (⌘ enter to send)"></textarea>
+          <div class="ai-actions">
+            <button class="ai-act"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+            <button class="ai-act"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></button>
+            <button class="ai-send">Send</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  </main>
+
+  <!-- ============ INSPECTOR (RIGHT) ============ -->
+  <aside class="inspect">
+
+    <!-- Impact -->
+    <div class="insp-section">
+      <div class="insp-head"><h4>This week</h4><span class="more">Details →</span></div>
+      <div class="impact-card">
+        <div class="impact-row">
+          <div class="impact-ring">
+            <svg width="74" height="74" viewBox="0 0 74 74">
+              <defs><linearGradient id="impGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="var(--accent)"/><stop offset="100%" stop-color="var(--accent-2)"/></linearGradient></defs>
+              <circle cx="37" cy="37" r="32" class="bg"/>
+              <circle cx="37" cy="37" r="32" class="fg" stroke-dasharray="201" stroke-dashoffset="48"/>
+            </svg>
+            <div class="impact-ring-num">76</div>
+          </div>
+          <div class="impact-text">
+            <h3>Strong week</h3>
+            <div class="sub">4 tasks shipped, 2 in progress. Bernard demo Friday is on track.</div>
+            <span class="impact-trend">↑ 6 vs last wk</span>
+          </div>
+        </div>
+        <div class="impact-bars">
+          <div class="imp-bar"><span class="lbl">Hours</span><span class="track"><span class="fill" style="width:78%"></span></span><span class="val">31 / 40</span></div>
+          <div class="imp-bar"><span class="lbl">Tasks</span><span class="track"><span class="fill" style="width:57%"></span></span><span class="val">4 / 7</span></div>
+          <div class="imp-bar"><span class="lbl">Streak</span><span class="track"><span class="fill" style="width:71%"></span></span><span class="val">5d</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="insp-section">
+      <div class="insp-head"><h4>Internship</h4><span class="more">Log hours →</span></div>
+      <div class="insp-card">
+        <div class="prog">
+          <div class="prog-row"><span>Total</span><span><strong>127</strong> / 450 hrs</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:28%"></div></div>
+        </div>
+        <div class="stat-row" style="margin-top:8px">
+          <div class="stat-cell"><div class="l">Onboarding</div><div class="v">12 <small>hr</small></div></div>
+          <div class="stat-cell"><div class="l">Masterclass</div><div class="v">31 <small>hr</small></div></div>
+          <div class="stat-cell"><div class="l">Projects</div><div class="v">84 <small>hr</small></div></div>
+          <div class="stat-cell"><div class="l">Impact</div><div class="v">76</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buddies -->
+    <div class="insp-section">
+      <div class="insp-head"><h4>AI Buddies</h4><span class="more">Manage →</span></div>
+      <div class="buddy active">
+        <div class="buddy-av b1">RS<span class="live"></span></div>
+        <div class="buddy-name">Research<small>scoped: SVI</small></div>
+      </div>
+      <div class="buddy">
+        <div class="buddy-av b2">DS<span class="live"></span></div>
+        <div class="buddy-name">Design<small>active in this room</small></div>
+      </div>
+      <div class="buddy">
+        <div class="buddy-av b3">WR</div>
+        <div class="buddy-name">Writer<small>idle</small></div>
+      </div>
+      <div class="buddy">
+        <div class="buddy-av b4">PM</div>
+        <div class="buddy-name">PM<small>idle</small></div>
+      </div>
+    </div>
+
+    <!-- Today's tasks -->
+    <div class="insp-section">
+      <div class="insp-head"><h4>Today</h4><span class="more">All →</span></div>
+      <div class="insp-card">
+        <div class="mini-task">
+          <div class="ck"></div>
+          <span class="nm">Lock hero typography decision</span>
+          <span class="when urg">5 PM</span>
+        </div>
+        <div class="mini-task">
+          <div class="ck"></div>
+          <span class="nm">Strapi DB — missing entries</span>
+          <span class="when">3 PM</span>
+        </div>
+        <div class="mini-task done">
+          <div class="ck done"></div>
+          <span class="nm">Morning standup notes</span>
+          <span class="when">9:30</span>
+        </div>
+        <div class="mini-task done">
+          <div class="ck done"></div>
+          <span class="nm">Reply to Kendra re: Friday</span>
+          <span class="when">10:15</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- Toast host -->
+<div class="toast-host" id="toastHost"></div>
+
+<!-- ============ TWEAKS PANEL ============ -->
+<button class="tw-fab" id="twFab" title="Tweaks">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</button>
+<div class="tw-panel" id="twPanel">
+  <h4>Tweaks<em>.</em><span class="tw-x" id="twClose">✕</span></h4>
+  <div class="tw-sec">Palette</div>
+  <div class="tw-themes" id="twThemes">
+    <div class="tw-th active" data-th="default"><div class="tw-th-sw"></div><div class="tw-th-lbl">Purple</div></div>
+    <div class="tw-th" data-th="garden"><div class="tw-th-sw"></div><div class="tw-th-lbl">Garden</div></div>
+    <div class="tw-th" data-th="dusk"><div class="tw-th-sw"></div><div class="tw-th-lbl">Dusk</div></div>
+  </div>
+  <div class="tw-sec">Density</div>
+  <div class="tw-density" id="twDensity">
+    <button data-density="compact">Compact</button>
+    <button data-density="comfortable" class="active">Comfort</button>
+    <button data-density="spacious">Spacious</button>
+  </div>
+  <div class="tw-sec">Mode</div>
+  <div class="tw-mode" id="twMode">
+    <button data-mode="default" class="active">Default</button>
+    <button data-mode="focus">Focus</button>
+    <button data-mode="custom">Custom</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const app = document.getElementById('app');
+
+  // Tweaks
+  document.getElementById('twFab').addEventListener('click', () => document.getElementById('twPanel').classList.toggle('open'));
+  document.getElementById('twClose').addEventListener('click', () => document.getElementById('twPanel').classList.remove('open'));
+  document.querySelectorAll('#twThemes .tw-th').forEach(el => el.addEventListener('click', () => {
+    document.querySelectorAll('#twThemes .tw-th').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    app.setAttribute('data-theme', el.dataset.th);
+  }));
+  document.querySelectorAll('#twDensity button').forEach(el => el.addEventListener('click', () => {
+    document.querySelectorAll('#twDensity button').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    app.setAttribute('data-density', el.dataset.density);
+  }));
+  document.querySelectorAll('#twMode button').forEach(el => el.addEventListener('click', () => {
+    document.querySelectorAll('#twMode button, header .mode').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelector('header .mode[data-mode="'+el.dataset.mode+'"]')?.classList.add('active');
+    app.setAttribute('data-mode', el.dataset.mode);
+  }));
+
+  // Top bar mode tabs
+  document.querySelectorAll('header .mode').forEach(el => el.addEventListener('click', () => {
+    document.querySelectorAll('header .mode, #twMode button').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelector('#twMode button[data-mode="'+el.dataset.mode+'"]')?.classList.add('active');
+    app.setAttribute('data-mode', el.dataset.mode);
+  }));
+
+  // Section nav scroll-spy + jump
+  const nav = document.getElementById('sectionNav');
+  nav.querySelectorAll('.pill').forEach(p => p.addEventListener('click', () => {
+    const id = p.dataset.jump;
+    const target = document.getElementById(id);
+    document.querySelector('.canvas').scrollTo({top: target.offsetTop - 170, behavior:'smooth'});
+  }));
+  const canvas = document.querySelector('.canvas');
+  const sections = ['sec-chat','sec-tasks','sec-notes'].map(id => document.getElementById(id));
+  canvas.addEventListener('scroll', () => {
+    const y = canvas.scrollTop + 200;
+    let activeIdx = 0;
+    sections.forEach((s, i) => { if (s.offsetTop <= y) activeIdx = i; });
+    nav.querySelectorAll('.pill').forEach((p, i) => p.classList.toggle('active', i === activeIdx));
+  });
+
+  // Tracker toggle
+  const playBtn = document.getElementById('playBtn');
+  let running = false, t0 = Date.now() - (1*3600 + 47*60 + 22)*1000;
+  function fmt(ms){ const s = Math.floor(ms/1000); const h = String(Math.floor(s/3600)).padStart(2,'0'); const m = String(Math.floor((s%3600)/60)).padStart(2,'0'); const ss = String(s%60).padStart(2,'0'); return `${h}:${m}:${ss}`; }
+  function tick(){ if(running) document.getElementById('trackTime').textContent = fmt(Date.now() - t0); }
+  setInterval(tick, 1000);
+  playBtn.addEventListener('click', () => {
+    running = !running;
+    playBtn.classList.toggle('running', running);
+    playBtn.innerHTML = running
+      ? '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+      : '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+    if (running) t0 = Date.now() - (1*3600 + 47*60 + 22)*1000;
+  });
+
+  // Mini-task checkboxes
+  document.querySelectorAll('.mini-task .ck').forEach(ck => ck.addEventListener('click', e => {
+    e.stopPropagation();
+    ck.classList.toggle('done');
+    ck.closest('.mini-task').classList.toggle('done', ck.classList.contains('done'));
+  }));
+
+  // Rooms click
+  document.querySelectorAll('.lib .room').forEach(r => r.addEventListener('click', () => {
+    document.querySelectorAll('.lib .room').forEach(x => x.classList.remove('active'));
+    r.classList.add('active');
+  }));
+
+  // Composer auto-resize
+  const ci = document.getElementById('composerInput');
+  if (ci) ci.addEventListener('input', () => {
+    ci.style.height = 'auto';
+    ci.style.height = Math.min(180, ci.scrollHeight) + 'px';
+  });
+
+  // ============ VIEW SWITCHING ============
+  document.querySelectorAll('.rail-btn[data-view]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.view;
+      document.querySelectorAll('.rail-btn[data-view]').forEach(x => x.classList.remove('active'));
+      btn.classList.add('active');
+      app.setAttribute('data-view', v);
+      document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+      const target = document.querySelector('.view-' + v);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  // ============ CALENDAR GRID ============
+  function buildCalendar(){
+    const grid = document.getElementById('calGrid'); if (!grid) return;
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const dnums = [11,12,13,14,15,16,17];
+    const today = 14; // Thu = today
+
+    // Header row
+    grid.innerHTML = '<div class="cal-corner"></div>' +
+      days.map((d,i) => `<div class="cal-day-head ${dnums[i]===today?'today':''}"><div class="dow">${d}</div><div class="dnum">${dnums[i]}</div></div>`).join('');
+
+    const events = [
+      // [day(0-6), startHour, endHour, title, type, color]
+      [0, 9, 10.5, 'Design crit · weekly', 'Design Room', 'purple'],
+      [0, 14, 15, 'Strapi sync standup', 'Engineering', 'sage'],
+      [1, 10, 11.5, 'Bootcamp messaging review', 'Bootcamp', 'plum'],
+      [1, 16, 17, '1:1 with Kendra', '1:1', 'rose'],
+      [2, 9.5, 11, 'SVI hero variants — review', 'SVI', 'purple'],
+      [2, 13, 14.5, 'NASA APOD demo', 'SVI', 'sage'],
+      [2, 15, 16, 'Composer architecture sync', 'Eng', 'plum'],
+      [3, 11, 12.5, 'Friday-demo dry run', 'SVI', 'rose'],
+      [3, 14, 15.5, 'Travel planning · Dubai', 'Solo', 'purple'],
+      [3, 17, 18, 'Team retro', 'Team', 'sage'],
+      [4, 10, 12, 'Bernard · SVI demo', 'SVI', 'rose'],
+      [4, 14, 15, 'Bootcamp 2025 launch sync', 'Bootcamp', 'plum'],
+      [5, 11, 12, 'Coffee · Rebecca', '1:1', 'sage'],
+      [6, 15, 16.5, 'Personal · long writing block', 'Solo', 'purple'],
+    ];
+    const HOUR_H = 54; // px per hour-row
+    const START_H = 8; // calendar starts at 8 AM
+
+    // Build hour rows
+    for (let h = START_H; h <= 20; h++) {
+      const hourLabel = h < 12 ? `${h} AM` : h === 12 ? '12 PM' : `${h-12} PM`;
+      grid.innerHTML += `<div class="cal-hour">${hourLabel}</div>` +
+        Array.from({length:7}, () => `<div class="cal-cell"></div>`).join('');
+    }
+
+    // Position events absolutely inside their day column
+    events.forEach(([day, start, end, title, type, color]) => {
+      const top = (start - START_H) * HOUR_H + 2;
+      const height = (end - start) * HOUR_H - 4;
+      // Find the first cell of this column at the row of the start hour
+      // Each row has 8 cells; column index = day+1 (0 is hour label)
+      // Get DOM position: walk cells of this column and use offsetTop of first one
+      const cells = grid.querySelectorAll('.cal-cell');
+      // Cells indexed: row r, col c (0..6) => r*7+c
+      const rowStart = Math.floor(start - START_H);
+      const cell = cells[rowStart * 7 + day];
+      if (!cell) return;
+      const evt = document.createElement('div');
+      evt.className = `cal-evt ${color}`;
+      evt.style.top = ((start - START_H - rowStart) * HOUR_H) + 'px';
+      evt.style.height = height + 'px';
+      evt.innerHTML = `<div class="et">${type}</div><div class="en">${title}</div>`;
+      cell.style.position = 'relative';
+      cell.appendChild(evt);
+    });
+  }
+  buildCalendar();
+
+  // ============ Conversations switching (AI chat) ============
+  document.querySelectorAll('.ai-thread').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.ai-thread').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+  }));
+  document.querySelectorAll('.ai-rt').forEach(r => r.addEventListener('click', () => {
+    document.querySelectorAll('.ai-rt').forEach(x => x.classList.remove('active'));
+    r.classList.add('active');
+  }));
+
+  // ============ TOAST HELPER ============
+  const toastHost = document.getElementById('toastHost');
+  function toast({title, sub, type='info', icon, duration=3200}) {
+    const el = document.createElement('div');
+    el.className = 'toast ' + (type === 'success' ? 'success' : type === 'warn' ? 'warn' : '');
+    const ic = icon || (type === 'success'
+      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>');
+    el.innerHTML = `<div class="ic">${ic}</div><div class="body">${title}${sub ? `<small>${sub}</small>` : ''}</div><div class="x"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>`;
+    toastHost.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('show'));
+    const close = () => { el.classList.remove('show'); setTimeout(() => el.remove(), 250); };
+    el.querySelector('.x').addEventListener('click', close);
+    setTimeout(close, duration);
+  }
+
+  // ============ POPOVER HELPER ============
+  function setupPopover(triggerId, popoverId, opts = {}) {
+    const trigger = document.getElementById(triggerId);
+    const popover = document.getElementById(popoverId);
+    if (!trigger || !popover) return;
+    trigger.addEventListener('click', e => {
+      e.stopPropagation();
+      // close any other open popovers
+      document.querySelectorAll('.popover.open').forEach(p => { if (p !== popover) p.classList.remove('open'); });
+      popover.classList.toggle('open');
+    });
+    popover.addEventListener('click', e => e.stopPropagation());
+  }
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
+  });
+
+  setupPopover('membersTrigger', 'membersPopover');
+  setupPopover('shareBtn', 'sharePopover');
+
+  // Start call
+  document.getElementById('startCallBtn')?.addEventListener('click', () => {
+    toast({
+      title: 'Starting call · Design Room',
+      sub: '4 members will be notified',
+      type: 'success',
+      icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>'
+    });
+  });
+
+  // Share popover actions
+  document.querySelectorAll('#sharePopover .pop-row[data-share]').forEach(row => {
+    row.addEventListener('click', () => {
+      const kind = row.dataset.share;
+      document.getElementById('sharePopover').classList.remove('open');
+      const titles = {
+        link: { title: 'Link copied', sub: 'flobrain.com/r/design-room' },
+        invite: { title: 'Invite composer opened', sub: 'Send to anyone by email' },
+        export: { title: 'Exporting room…', sub: 'Markdown bundle queued' },
+        settings: { title: 'Permissions', sub: 'Opening room access panel' }
+      };
+      toast({ ...(titles[kind] || { title: 'Done' }), type: 'success' });
+    });
+  });
+
+  // Invite from members popover
+  document.getElementById('inviteMember')?.addEventListener('click', () => {
+    document.getElementById('membersPopover').classList.remove('open');
+    toast({ title: 'Invite to Design Room', sub: 'Email composer opened', type: 'success' });
+  });
+
+  // ============ UNIVERSAL SEGMENTED CONTROLS ============
+  // .cal-views handles: Tasks (Board/List/Timeline), Calendar (Day/Week/Month), Report (Day/Week/Month/Quarter)
+  document.querySelectorAll('.cal-views').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // Notify any handler interested in this mode change
+      const mode = btn.textContent.trim();
+      group.dispatchEvent(new CustomEvent('modechange', { detail: { mode } }));
+    });
+  });
+
+  // ============ TASK FILTERS ============
+  const taskFilters = document.querySelectorAll('#view-tasks .tk-chip');
+  taskFilters.forEach(chip => {
+    const firstWord = chip.firstChild?.textContent?.trim() || '';
+    if (firstWord.startsWith('Filter')) return; // skip the trailing filter-dropdown chip
+    chip.addEventListener('click', () => {
+      taskFilters.forEach(c => {
+        if ((c.firstChild?.textContent?.trim() || '').startsWith('Filter')) return;
+        c.classList.remove('active');
+      });
+      chip.classList.add('active');
+      applyTaskFilter(chip);
+    });
+  });
+
+  function applyTaskFilter(chip) {
+    const label = (chip.firstChild?.textContent || '').trim();
+    document.querySelectorAll('#view-tasks .task').forEach(t => {
+      const titleLower = (t.querySelector('.task-title')?.textContent || '').toLowerCase();
+      const hasHi = !!t.querySelector('.task-tag.hi');
+      const hasMA = Array.from(t.querySelectorAll('.task-as .av')).some(av => av.textContent.trim() === 'MA');
+      const dueEl = t.querySelector('.task-due');
+      const dueText = (dueEl?.textContent || '').toLowerCase();
+      const isUrgent = dueEl?.classList.contains('urgent');
+      const thisWeek = isUrgent
+        || /today|tomorrow|tonight|thu|fri|sat|sun|eod|am|pm|mon|tue|wed/.test(dueText)
+        || (/\d/.test(dueText) && !dueText.includes('next wk') && !dueText.includes('in 2w') && !dueText.includes('in 3w') && !dueText.includes('last wk'));
+
+      let show = true;
+      switch (label) {
+        case 'All': show = true; break;
+        case 'Assigned to me': show = hasMA; break;
+        case 'High priority': show = hasHi; break;
+        case 'Due this week': show = thisWeek; break;
+        case 'Design Room':
+          show = /(hero|design|typograph|composer|agent|crit|figma|spec)/.test(titleLower);
+          break;
+        case 'SVI':
+          show = /(svi|hero|apod|nasa|bernard|demo)/.test(titleLower);
+          break;
+        default: show = true;
+      }
+      t.classList.toggle('hidden-task', !show);
+    });
+    // Recount each column
+    document.querySelectorAll('#view-tasks .tcol').forEach(col => {
+      const visible = col.querySelectorAll('.task:not(.hidden-task)').length;
+      const cnt = col.querySelector('.cnt');
+      if (cnt) cnt.textContent = visible;
+    });
+  }
+
+  // ============ DOCS FILTERS ============
+  const docTabs = document.querySelectorAll('#view-docs .dx-tab');
+  docTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      docTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      applyDocFilter();
+    });
+  });
+  const docSearch = document.getElementById('docSearchInput');
+  if (docSearch) docSearch.addEventListener('input', applyDocFilter);
+  function applyDocFilter() {
+    const active = document.querySelector('#view-docs .dx-tab.active');
+    const cat = (active?.textContent || 'All').trim();
+    const q = (docSearch?.value || '').trim().toLowerCase();
+    document.querySelectorAll('#view-docs .dx-card').forEach(card => {
+      const eyebrow = (card.querySelector('.dx-eyebrow')?.textContent || '').toLowerCase();
+      const title = (card.querySelector('h4')?.textContent || '').toLowerCase();
+      const ex = (card.querySelector('.ex')?.textContent || '').toLowerCase();
+      let catMatch = true;
+      if (cat !== 'All') catMatch = eyebrow.includes(cat.toLowerCase().slice(0, -1)); // Specs → spec, Drafts → draft
+      const qMatch = !q || title.includes(q) || ex.includes(q) || eyebrow.includes(q);
+      card.classList.toggle('hidden-doc', !(catMatch && qMatch));
+    });
+  }
+})();
+<\/script>
+<style>
+.hidden-task, .hidden-doc { display: none !important; }
+</style>
+
+</body>
+</html>
+</script>
+<script>
+(function(){
+  const frame = document.getElementById("frame");
+  const splash = document.getElementById("splash");
+  function pageHtml(id){ return document.getElementById(id).textContent.split("<\\/script>").join("\u003C/script>"); }
+  const loginHtml = pageHtml("page-login");
+  const appHtml = pageHtml("page-app");
+  function load(html){
+    frame.classList.add("fade");
+    setTimeout(() => {
+      frame.srcdoc = html;
+      frame.onload = () => {
+        frame.classList.remove("fade");
+        splash.classList.add("hide");
+        setTimeout(() => { if (splash.parentNode) splash.remove(); }, 400);
+        frame.onload = null;
+      };
+    }, 100);
+  }
+  window.addEventListener("message", e => {
+    if (e.data && e.data.type === "flobrain-signin") load(appHtml);
+  });
+  load(loginHtml);
+})();
+</script>
+</body>
+</html>
