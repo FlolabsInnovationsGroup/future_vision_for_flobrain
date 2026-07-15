@@ -1631,7 +1631,8 @@ body.light-theme .cockpit-room-card:hover .crc-open { border-color: #7C5CFF !imp
 
 /* ── 11. Buddy surface ── */
 #surface-buddy { flex-direction: column !important; flex: 1 !important; min-height: 0 !important; }
-#buddyContent { flex: 1 !important; min-height: 0 !important; flex-direction: column !important; overflow: hidden !important; }
+#buddyContent { flex: 1 !important; min-height: 0 !important; flex-direction: column !important; overflow-y: auto !important; }
+#buddyContent.design-buddy-shell { overflow: hidden !important; }
 
 /* ── 12. Right rail: fill full height, no overflow ── */
 .right-rail { align-self: stretch !important; }

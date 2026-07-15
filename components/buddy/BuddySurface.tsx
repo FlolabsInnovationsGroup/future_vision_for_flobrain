@@ -15,7 +15,16 @@ export function BuddySurface() {
 
   return (
     <div className="surface active" id="surface-buddy">
-      <div id="buddyContent" className={isDesign ? "design-buddy-shell" : ""} style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div
+        id="buddyContent"
+        className={isDesign ? "design-buddy-shell" : ""}
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: isDesign ? "hidden" : "auto",
+        }}
+      >
         {!b ? null : key === "health" ? (
           <HealthDashboard />
         ) : key === "design" ? (
