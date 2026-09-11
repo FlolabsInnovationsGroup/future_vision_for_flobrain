@@ -1,0 +1,51 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "dependabot/npm_and_yarn/ceren/v1/baseline-browser-mapping-2.11.22",
+    "dependabot/npm_and_yarn/ceren/v1/browserslist-4.28.9",
+    "dependabot/npm_and_yarn/ceren/v1/js-yaml-4.3.2",
+    "dependabot/npm_and_yarn/ceren/v1/nanoid-3.3.18",
+    "dependabot/npm_and_yarn/ceren/v1/next-16.3.3",
+    "dependabot/npm_and_yarn/ceren/v2/next-16.3.3",
+    "dependabot/npm_and_yarn/claudia/js-yaml-4.3.1",
+    "dependabot/npm_and_yarn/claudia/nanoid-3.3.18",
+    "dependabot/npm_and_yarn/claudia/next-16.3.3",
+    "dependabot/npm_and_yarn/diogo/v2/multi-4b10dec7ea",
+    "dependabot/npm_and_yarn/diogo/v2/multi-89f32e2167",
+    "dependabot/npm_and_yarn/diogo/v2/nanoid-3.3.18",
+    "main",
+    "v2"
+  ],
+  "parent": {
+    "dependabot/npm_and_yarn/ceren/v1/baseline-browser-mapping-2.11.22": "main",
+    "dependabot/npm_and_yarn/ceren/v1/browserslist-4.28.9": "main",
+    "dependabot/npm_and_yarn/ceren/v1/js-yaml-4.3.2": "main",
+    "dependabot/npm_and_yarn/ceren/v1/nanoid-3.3.18": "main",
+    "dependabot/npm_and_yarn/ceren/v1/next-16.3.3": "main",
+    "dependabot/npm_and_yarn/ceren/v2/next-16.3.3": "main",
+    "dependabot/npm_and_yarn/claudia/js-yaml-4.3.1": "main",
+    "dependabot/npm_and_yarn/claudia/nanoid-3.3.18": "main",
+    "dependabot/npm_and_yarn/claudia/next-16.3.3": "main",
+    "dependabot/npm_and_yarn/diogo/v2/multi-4b10dec7ea": "main",
+    "dependabot/npm_and_yarn/diogo/v2/multi-89f32e2167": "main",
+    "dependabot/npm_and_yarn/diogo/v2/nanoid-3.3.18": "main",
+    "main": null,
+    "v2": "main"
+  },
+  "order": [
+    "main",
+    "dependabot/npm_and_yarn/ceren/v1/baseline-browser-mapping-2.11.22",
+    "dependabot/npm_and_yarn/ceren/v1/browserslist-4.28.9",
+    "dependabot/npm_and_yarn/ceren/v1/js-yaml-4.3.2",
+    "dependabot/npm_and_yarn/ceren/v1/nanoid-3.3.18",
+    "dependabot/npm_and_yarn/ceren/v1/next-16.3.3",
+    "dependabot/npm_and_yarn/ceren/v2/next-16.3.3",
+    "dependabot/npm_and_yarn/claudia/js-yaml-4.3.1",
+    "dependabot/npm_and_yarn/claudia/nanoid-3.3.18",
+    "dependabot/npm_and_yarn/claudia/next-16.3.3",
+    "dependabot/npm_and_yarn/diogo/v2/multi-4b10dec7ea",
+    "dependabot/npm_and_yarn/diogo/v2/multi-89f32e2167",
+    "dependabot/npm_and_yarn/diogo/v2/nanoid-3.3.18",
+    "v2"
+  ]
+}
